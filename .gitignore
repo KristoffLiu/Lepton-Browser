@@ -1,0 +1,11 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/Lepton Library/obj
+/.vs
+/Lepton Browser/AppPackages
+/Lepton Browser/bin
+/Lepton Browser/BundleArtifacts
+/Lepton Browser/obj
+/Lepton Library/bin/x86/Debug
