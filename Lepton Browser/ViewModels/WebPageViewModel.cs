@@ -12,17 +12,23 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Xaml.Input;
+using Lepton_Browser.Views;
+using WebViewJSBridge;
 
 namespace Lepton_Browser.ViewModels
 {
     public class WebPageViewModel : ViewModelBase
     {
+        BridgeDemo _bridge = new BridgeDemo();
         public static List<WebPageViewModel> All = new List<WebPageViewModel>();
-        public WebPageViewModel(WebView webview)
+        public WebPageViewModel(WebPage webPage)
         {
             All.Add(this);
-            
-            WebView = webview;
+
+            WebView = webPage.Webview;
+            WebviewFlyout = webPage.WebviewFlyout;
+
             #region Event Initialization 加载事件
             //WebView = new WebView(WebViewExecutionMode.SeparateThread);
             WebView.FrameContentLoading += webView_FrameContentLoading;
@@ -33,13 +39,16 @@ namespace Lepton_Browser.ViewModels
             WebView.FrameNavigationCompleted += webView_FrameNavigationCompleted;
             WebView.NewWindowRequested += WebView_NewWindowRequested;
             WebView.ContainsFullScreenElementChanged += WebView_ContainsFullScreenElementChanged;
+            WebView.RightTapped += Webview_RightTapped;
+            WebView.DOMContentLoaded += Webview_DOMContentLoaded;
             #endregion
         }
-        
+
         public Guid Windows_ID;
         public Guid ID;
 
         public WebView WebView;
+        public MenuFlyout WebviewFlyout;
 
         public static WebView ReturnActiveWebview()
         {
@@ -49,10 +58,10 @@ namespace Lepton_Browser.ViewModels
 
             foreach (var item in All)
             {
-                    if(item.ID == active_id)
-                    {
-                        result = item.WebView;
-                    }
+                if (item.ID == active_id)
+                {
+                    result = item.WebView;
+                }
             }
             return result;
         }
@@ -65,10 +74,10 @@ namespace Lepton_Browser.ViewModels
 
             foreach (var item in All)
             {
-                    if (item.ID == active_id)
-                    {
-                        result = item;
-                    }
+                if (item.ID == active_id)
+                {
+                    result = item;
+                }
             }
             return result;
         }
@@ -158,8 +167,12 @@ namespace Lepton_Browser.ViewModels
         #endregion
 
         #region 页面加载逻辑
+
+        
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
+            //OURBRIDGEOBJ这个是我们的对象插入到页面之后对象的变量名，这是一个全局变量，也就是window.OURBRIDGEOBJ
+            this.WebView.AddWebAllowedObject("BridgeObject", _bridge);
             IsLoading = true;
             var info = new TabPageInfo();
             info.ID = ID;
@@ -168,16 +181,33 @@ namespace Lepton_Browser.ViewModels
             AppManager.Current.UpdateTabPage(info);
             Update();
         }
+
+        public async Task testAsync(WebView sender)
+        {
+
+        }
         private void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             IsLoading = false;
             var info = new TabPageInfo();
-                info.ID = ID;
-                info.Title = WebView.DocumentTitle;
-                info.Avastar = WebView.Source.ToString();
+            info.ID = ID;
+            info.Title = WebView.DocumentTitle;
+            info.Avastar = WebView.Source.ToString();
             AppManager.Current.UpdateTabPage(info);
             Update();
             UpdateCaptureScreenShot();
+        }
+
+        private async void Webview_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+        {
+            string js = @"window.onscroll = function(){
+                            // 首先判断我们对象是否正确插入
+                            if (window.BridgeObject) {
+                                //调用的我们消息函数
+                                window.BridgeObject.showMessage(""呵呵呵，我是个message"");
+                            }
+                        }";
+            await sender.InvokeScriptAsync("eval", new[] { js });
         }
 
 
@@ -217,6 +247,8 @@ namespace Lepton_Browser.ViewModels
             ////string js = @"window.onscroll = function() {var scrollTop = document.documentElement.scrollTop;}";// || document.body.scrollTop
             ////MouseWheelDelta = Convert.ToInt32(await sender.InvokeScriptAsync("eval", new[] { js }));
         }
+
+
         #endregion
 
         #region Web事件
@@ -257,18 +289,11 @@ namespace Lepton_Browser.ViewModels
             }
         }
 
-
-
-
-
-
         //加载中
         private void webView_Loading(FrameworkElement sender, object args)
         {
 
         }
-
-
 
         private void WebView_FrameNavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
@@ -280,6 +305,7 @@ namespace Lepton_Browser.ViewModels
 
 
         }
+
         //private void webView_ContentLoading(WebView sender, WebViewContentLoadingEventArgs args)
         //{
         //    LoadIncompleted(sender);
@@ -479,17 +505,29 @@ namespace Lepton_Browser.ViewModels
         public async Task UpdateCaptureScreenShot()
         {
             BitmapSource bitmapImage = await CaptureScreenShot();
-                TabsSetViewModel.Current.UpdateCaptureScreenShot(ID, bitmapImage);
+            TabsSetViewModel.Current.UpdateCaptureScreenShot(ID, bitmapImage);
         }
 
         public void Update()
         {
-                ManipulationBarViewModel.Current.Update(ReturnExpansionInfo());
+            ManipulationBarViewModel.Current.Update(ReturnExpansionInfo());
         }
 
         public async void ClearCache()
         {
             await WebView.ClearTemporaryWebDataAsync();
+        }
+        #endregion
+
+        #region 右键
+        private void Webview_RightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            WebviewFlyout.ShowAt(WebView, e.GetPosition(sender as UIElement));
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
         #endregion
 
@@ -505,7 +543,7 @@ namespace Lepton_Browser.ViewModels
 
         public void Test()
         {
-            
+
         }
     }
 }

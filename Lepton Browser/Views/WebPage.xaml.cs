@@ -28,7 +28,7 @@ namespace Lepton_Browser.Views
         public WebPage()
         {
             this.InitializeComponent();
-            ViewModel = new WebPageViewModel(Webview);
+            ViewModel = new WebPageViewModel(this);
             DataContext = ViewModel;
         }
 
@@ -47,5 +47,7 @@ namespace Lepton_Browser.Views
             }
             base.OnNavigatedTo(e);
         }
+
+
     }
 }

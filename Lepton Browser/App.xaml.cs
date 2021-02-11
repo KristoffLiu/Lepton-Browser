@@ -1,4 +1,5 @@
 ﻿using Lepton_Browser.Models;
+using Lepton_Browser.Services;
 using Lepton_Browser.Views;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace Lepton_Browser
     /// </summary>
     sealed partial class App : Application
     {
+        public static EvalJSService EvalJSService;
         /// <summary>
         /// 初始化单一实例应用程序对象。这是执行的创作代码的第一行，
         /// 已执行，逻辑上等同于 main() 或 WinMain()。
@@ -33,6 +35,7 @@ namespace Lepton_Browser
             tabPageManager = new AppManager();
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            EvalJSService = new EvalJSService();
         }
 
         public static AppManager tabPageManager;

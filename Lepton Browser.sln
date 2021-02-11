@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lepton Browser", "Lepton Br
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lepton Library", "Lepton Library\Lepton Library.csproj", "{FE38DF6A-0619-4199-ADEB-BD3EF0E07297}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebViewJSBridge", "WebViewJSBridge\WebViewJSBridge.csproj", "{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,26 @@ Global
 		{FE38DF6A-0619-4199-ADEB-BD3EF0E07297}.Release|x64.Build.0 = Release|x64
 		{FE38DF6A-0619-4199-ADEB-BD3EF0E07297}.Release|x86.ActiveCfg = Release|x86
 		{FE38DF6A-0619-4199-ADEB-BD3EF0E07297}.Release|x86.Build.0 = Release|x86
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|ARM.ActiveCfg = Debug|ARM
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|ARM.Build.0 = Debug|ARM
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|ARM64.Build.0 = Debug|ARM64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|x64.ActiveCfg = Debug|x64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|x64.Build.0 = Debug|x64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|x86.ActiveCfg = Debug|x86
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Debug|x86.Build.0 = Debug|x86
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|ARM.ActiveCfg = Release|ARM
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|ARM.Build.0 = Release|ARM
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|ARM64.ActiveCfg = Release|ARM64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|ARM64.Build.0 = Release|ARM64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|x64.ActiveCfg = Release|x64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|x64.Build.0 = Release|x64
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|x86.ActiveCfg = Release|x86
+		{EDA4A960-FC06-40DD-80B7-17347DF3EFBF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

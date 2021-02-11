@@ -217,7 +217,8 @@
                     Margin="3,2,5,2">
             <AppBarButton Width="40" Height="40"
                           Click="{x:Bind ViewModel.BackwardButtonHandler}"
-                          IsEnabled="{x:Bind ViewModel.IsBackwardEnabled, Mode=OneWay}" Background="Transparent" Foreground="#FF555555">
+                          IsEnabled="{x:Bind ViewModel.IsBackwardEnabled, Mode=OneWay}"
+                          Background="Transparent" Foreground="#FF555555">
                 <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE973;" Margin="0,-2,0,-2"></FontIcon>
             </AppBarButton>
             <AppBarButton IsEnabled="{x:Bind ViewModel.IsForwardEnabled, Mode=OneWay}"

@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="InstancesManager.cs" />
     <Compile Include="Models\Personalization.cs" />
+    <Compile Include="Services\EvalJSService.cs" />
     <Compile Include="ViewModels\Personalization\OverViewViewModel.cs" />
     <Compile Include="ViewModels\Personalization\ThemeViewModel.cs" />
     <Compile Include="Program.cs" />
@@ -226,6 +227,7 @@
     <Content Include="Assets\Logo\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Logo\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Logo\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\EvalJSCode.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -291,6 +293,10 @@
     <ProjectReference Include="..\Lepton Library\Lepton Library.csproj">
       <Project>{fe38df6a-0619-4199-adeb-bd3ef0e07297}</Project>
       <Name>Lepton Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebViewJSBridge\WebViewJSBridge.csproj">
+      <Project>{eda4a960-fc06-40dd-80b7-17347df3efbf}</Project>
+      <Name>WebViewJSBridge</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
