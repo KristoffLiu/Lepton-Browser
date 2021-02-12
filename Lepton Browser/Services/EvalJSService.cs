@@ -7,9 +7,14 @@ using Windows.Storage;
 
 namespace Lepton_Browser.Services
 {
+    /// <summary>
+    /// Service for 
+    /// </summary>
     public class EvalJSService
     {
-        public string JSString = "";
+        private const string file_URL = "ms-appx:///Assets/EvalJSCode";
+        
+        private static string code_ContextMenuHandler = "";
 
         public EvalJSService()
         {
@@ -20,7 +25,18 @@ namespace Lepton_Browser.Services
         {
             Uri uri = new Uri("ms-appx:///Assets/EvalJSCode.txt");
             StorageFile jsStringFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
-            JSString = await Windows.Storage.FileIO.ReadTextAsync(jsStringFile);
+            _initialJSCode = await Windows.Storage.FileIO.ReadTextAsync(jsStringFile);
         }
+
+        public string InitialJSCode
+        {
+            get { return _initialJSCode; }
+        }
+
+
+
+        public 
+
+
     }
 }

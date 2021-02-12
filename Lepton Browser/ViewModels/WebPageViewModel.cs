@@ -15,11 +15,18 @@ using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Input;
 using Lepton_Browser.Views;
 using WebViewJSBridge;
+using Lepton_Browser.Services;
 
 namespace Lepton_Browser.ViewModels
 {
     public class WebPageViewModel : ViewModelBase
     {
+        public Guid Windows_ID;
+        public Guid ID;
+
+        public WebView WebView;
+        public MenuFlyout WebviewFlyout;
+
         BridgeDemo _bridge = new BridgeDemo();
         public static List<WebPageViewModel> All = new List<WebPageViewModel>();
         public WebPageViewModel(WebPage webPage)
@@ -43,12 +50,6 @@ namespace Lepton_Browser.ViewModels
             WebView.DOMContentLoaded += Webview_DOMContentLoaded;
             #endregion
         }
-
-        public Guid Windows_ID;
-        public Guid ID;
-
-        public WebView WebView;
-        public MenuFlyout WebviewFlyout;
 
         public static WebView ReturnActiveWebview()
         {
@@ -200,13 +201,7 @@ namespace Lepton_Browser.ViewModels
 
         private async void Webview_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
-            string js = @"window.onscroll = function(){
-                            // 首先判断我们对象是否正确插入
-                            if (window.BridgeObject) {
-                                //调用的我们消息函数
-                                window.BridgeObject.showMessage(""呵呵呵，我是个message"");
-                            }
-                        }";
+            string js = EvalJSService.InitialJSCode;
             await sender.InvokeScriptAsync("eval", new[] { js });
         }
 

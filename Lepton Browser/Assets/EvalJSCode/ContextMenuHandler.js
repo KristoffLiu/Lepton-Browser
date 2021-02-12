@@ -1,4 +1,4 @@
-﻿var webViewId = 0;
+﻿var webViewId = "";
 var targetOnContextMenu = null;
 document.oncontextmenu = function (event) {
   console.debug('content menu');
@@ -15,6 +15,7 @@ document.oncontextmenu = function (event) {
 
   targetOnContextMenu = event.target;
   var subType = event.target.type;
+  console.log(subType);
   var href = findLinkUrl(event.target, 3);
   var image = findImage(event.target);
   var selection = hasSelection();
