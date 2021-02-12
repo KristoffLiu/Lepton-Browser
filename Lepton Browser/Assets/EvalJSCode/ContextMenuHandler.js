@@ -19,8 +19,8 @@ document.oncontextmenu = function (event) {
   var href = findLinkUrl(event.target, 3);
   var image = findImage(event.target);
   var selection = hasSelection();
-  if (window.contextMenu) {
-    window.contextMenu.show(webViewId, event.clientX, event.clientY,
+  if (window.WebViewBridge) {
+    window.WebViewBridge.showContextMenu(webViewId, event.clientX, event.clientY,
       nodeName, subType, href, image, selection);
     return false;
   }

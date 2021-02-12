@@ -16,25 +16,27 @@ using Windows.UI.Xaml.Input;
 using Lepton_Browser.Views;
 using WebViewJSBridge;
 using Lepton_Browser.Services;
+using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Lepton_Browser.ViewModels
 {
-    public class WebPageViewModel : ViewModelBase
+    public class WebPageViewModel : ViewModelBase, IWebViewModel
     {
+        WebViewBridge _bridge;
+
         public Guid Windows_ID;
         public Guid ID;
 
         public WebView WebView;
-        public MenuFlyout WebviewFlyout;
+        public CommandBarFlyout ContextMenuFlyout;
 
-        BridgeDemo _bridge = new BridgeDemo();
         public static List<WebPageViewModel> All = new List<WebPageViewModel>();
         public WebPageViewModel(WebPage webPage)
         {
             All.Add(this);
-
+            _bridge = new WebViewBridge(this);
             WebView = webPage.Webview;
-            WebviewFlyout = webPage.WebviewFlyout;
+            ContextMenuFlyout = webPage.ContextMenuFlyout;
 
             #region Event Initialization 加载事件
             //WebView = new WebView(WebViewExecutionMode.SeparateThread);
@@ -173,7 +175,7 @@ namespace Lepton_Browser.ViewModels
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             //OURBRIDGEOBJ这个是我们的对象插入到页面之后对象的变量名，这是一个全局变量，也就是window.OURBRIDGEOBJ
-            this.WebView.AddWebAllowedObject("BridgeObject", _bridge);
+            this.WebView.AddWebAllowedObject("WebViewBridge", _bridge);
             IsLoading = true;
             var info = new TabPageInfo();
             info.ID = ID;
@@ -187,7 +189,7 @@ namespace Lepton_Browser.ViewModels
         {
 
         }
-        private void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private async void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             IsLoading = false;
             var info = new TabPageInfo();
@@ -196,43 +198,19 @@ namespace Lepton_Browser.ViewModels
             info.Avastar = WebView.Source.ToString();
             AppManager.Current.UpdateTabPage(info);
             Update();
-            UpdateCaptureScreenShot();
+            await UpdateCaptureScreenShot();
         }
 
         private async void Webview_DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
-            string js = EvalJSService.InitialJSCode;
-            await sender.InvokeScriptAsync("eval", new[] { js });
+            await sender.InvokeScriptAsync("eval", 
+                new[] {
+                    EvalJSService.InitContextMenuHandler,
+                    EvalJSService.InitDragDropEvent,
+                    EvalJSService.InitFaviconGetter,
+                    EvalJSService.InitZoom,
+                });
         }
-
-
-        //private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        //{
-        //    IsLoading = true;
-        //    var info = new TabPageInfo();
-        //    foreach (var manager in AppManager.All)
-        //    {
-        //        info.ID = ID;
-        //        info.Title = "正在加载";
-        //        info.Avastar = WebView.Source.ToString();
-        //        manager.UpdateTabPage(info);
-        //    }
-        //    Update();
-        //}
-        //private void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
-        //{
-        //    IsLoading = false;
-        //    var info = new TabPageInfo();
-        //    foreach (var manager in AppManager.All)
-        //    {
-        //        info.ID = ID;
-        //        info.Title = WebView.DocumentTitle;
-        //        info.Avastar = WebView.Source.ToString();
-        //        manager.UpdateTabPage(info);
-        //    }
-        //    Update();
-        //    UpdateCaptureScreenShot();
-        //}
 
         private async void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
@@ -517,7 +495,8 @@ namespace Lepton_Browser.ViewModels
         #region 右键
         private void Webview_RightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            WebviewFlyout.ShowAt(WebView, e.GetPosition(sender as UIElement));
+            //WebviewFlyout.ShowAt(WebView);
+            //WebviewFlyout.ShowAt(WebView, e.GetPosition(WebView));
         }
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
@@ -536,9 +515,15 @@ namespace Lepton_Browser.ViewModels
             return tabPageInfoExpansion;
         }
 
-        public void Test()
+        public void ShowContextMenu(string webViewId, float x, float y, string nodeName, string subType, string href, string image, bool selection)
         {
-
+            FlyoutShowOptions _ContextMenuFlyoutOption = new FlyoutShowOptions
+            {
+                ShowMode = FlyoutShowMode.Standard,
+                Placement = FlyoutPlacementMode.RightEdgeAlignedBottom,
+                Position = new Windows.Foundation.Point(x, y + 40)
+            };
+            ContextMenuFlyout.ShowAt(WebView, _ContextMenuFlyoutOption);
         }
     }
 }

@@ -47,7 +47,5 @@ namespace Lepton_Browser.Views
             }
             base.OnNavigatedTo(e);
         }
-
-
     }
 }

@@ -28,7 +28,6 @@ namespace Lepton_Browser.Models
         public List<int> Index = new List<int>();
 
 
-
         public void AddNewTabPage(string Title, string web_url)
         {
             var item = new TabPageInfo()

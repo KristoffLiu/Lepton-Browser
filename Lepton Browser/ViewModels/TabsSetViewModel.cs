@@ -144,7 +144,7 @@ namespace Lepton_Browser.ViewModels
             var listview = sender as ListView;
                 if (TaskBarListView.SelectedItem != null)
                 {
-                AppManager.Current.SwitchTabPage(((TaskBarItemViewModel)TaskBarListView.SelectedItem).Id);
+                    AppManager.Current.SwitchTabPage(((TaskBarItemViewModel)TaskBarListView.SelectedItem).Id);
                 }
         }
 

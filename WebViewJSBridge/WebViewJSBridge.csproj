@@ -121,6 +121,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IWebViewModel.cs" />
     <Compile Include="Model\ContextMenuInfo.cs" />
     <Compile Include="WebViewBridge.cs" />
     <Compile Include="BridgeDemo.cs" />

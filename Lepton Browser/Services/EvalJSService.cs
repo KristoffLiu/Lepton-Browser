@@ -10,33 +10,74 @@ namespace Lepton_Browser.Services
     /// <summary>
     /// Service for 
     /// </summary>
-    public class EvalJSService
+    public static class EvalJSService
     {
-        private const string file_URL = "ms-appx:///Assets/EvalJSCode";
-        
-        private static string code_ContextMenuHandler = "";
+        private const string filehead_URL = "ms-appx:///Assets/EvalJSCode/";
 
-        public EvalJSService()
+        private const string fileName_ContextMenuHandler = "ContextMenuHandler.js";
+        private const string fileName_Zoom               = "Zoom.js";
+        private const string fileName_DragDropEvent      = "DragDropEvent.js";
+        private const string fileName_FaviconGetter      = "FaviconGetter.js";
+
+        private static string jscode_ContextMenuHandler       = "";
+        private static string jscode_Zoom                     = "";
+        private static string jscode_DragDropEvent            = "";
+        private static string jscode_FaviconGetter            = "";
+
+        public static async void InitServiceAsync()
         {
-            InitAsync();
+            StorageFile file_ContextMenuHandler = await StorageFile.GetFileFromApplicationUriAsync( new Uri( filehead_URL + fileName_ContextMenuHandler   ));
+            StorageFile file_Zoom               = await StorageFile.GetFileFromApplicationUriAsync( new Uri( filehead_URL + fileName_Zoom                 ));
+            StorageFile file_DragDropEvent      = await StorageFile.GetFileFromApplicationUriAsync( new Uri( filehead_URL + fileName_DragDropEvent        ));
+            StorageFile file_FaviconGetter      = await StorageFile.GetFileFromApplicationUriAsync( new Uri( filehead_URL + fileName_FaviconGetter        ));
+            jscode_ContextMenuHandler  = await FileIO.ReadTextAsync( file_ContextMenuHandler );
+            jscode_Zoom                = await FileIO.ReadTextAsync( file_Zoom               );
+            jscode_DragDropEvent       = await FileIO.ReadTextAsync( file_DragDropEvent      );
+            jscode_FaviconGetter       = await FileIO.ReadTextAsync( file_FaviconGetter      );
         }
 
-        private async void InitAsync()
+        public static string InitContextMenuHandler
         {
-            Uri uri = new Uri("ms-appx:///Assets/EvalJSCode.txt");
-            StorageFile jsStringFile = await StorageFile.GetFileFromApplicationUriAsync(uri);
-            _initialJSCode = await Windows.Storage.FileIO.ReadTextAsync(jsStringFile);
+            get { return jscode_ContextMenuHandler; }
         }
 
-        public string InitialJSCode
+        public static string InitFaviconGetter
         {
-            get { return _initialJSCode; }
+            get { return jscode_FaviconGetter; }
         }
 
+        public static string InitZoom
+        {
+            get { return jscode_Zoom; }
+        }
+        public static string InitDragDropEvent
+        {
+            get { return jscode_DragDropEvent; }
+        }
 
+        public static string Zoom()
+        {
+            return Zoom(100);
+        }
 
-        public 
+        public static string Zoom(int zoomValue)
+        {
+            return "ZoomFunction("+ Convert.ToString(100) + ")";
+        }
 
+        public static string ZoomRegister(int zoomValue)
+        {
+            return "RegisterZoomMonitor.TryRegisterZoomMonitor('')";
+        }
 
+        public static string EvalDragDropEvent(int zoomValue)
+        {
+            return jscode_DragDropEvent;
+        }
+
+        public static string DragDropEventRegister(int zoomValue)
+        {
+            return "RegisterDragDropHandler.TryRegisterDragDropHandler('')";
+        }
     }
 }

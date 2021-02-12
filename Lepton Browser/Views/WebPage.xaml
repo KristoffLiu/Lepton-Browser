@@ -4,17 +4,86 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Lepton_Browser.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:muxcontrols="using:Windows.UI.Xaml.Controls" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <UserControl.Resources>
+        <muxcontrols:CommandBarFlyout x:Name="ContextMenuFlyout" x:FieldModifier="public">
+            <AppBarButton Label="分享" Icon="Copy"/>
+            <AppBarButton Label="收藏" Icon="NewWindow"/>
+            <AppBarButton Label="关闭" Icon="ClosePane"/>
+            <AppBarButton Label="查找" Icon="Find"/>
+            <AppBarButton Label="收藏" Icon="Favorite"/>
+            <muxcontrols:CommandBarFlyout.SecondaryCommands>
+                <AppBarElementContainer>
+                    <StackPanel Orientation="Vertical"
+                                Height="340"
+                                Width="300">
+                        <Grid Height="40">
+                            <TextBlock Text="bilibili.com"
+                                               Foreground="#FFAAAAAA"
+                                               HorizontalAlignment="Left" VerticalAlignment="Center"
+                                               Margin="10,0,0,2"></TextBlock>
 
+                            <TextBlock Text="隐藏预览"
+                                               Foreground="#FFAAAAAA"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                                               Margin="0,0,10,2"></TextBlock>
+                        </Grid>
+                        <Grid Height="300" Background="Gray">
+                            <WebView Source="https://www.bilibili.com" ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                     Width="316"></WebView>
+                        </Grid>
+                    </StackPanel>
+                </AppBarElementContainer>
+                <!--<AppBarButton x:Name="CopyButton" Label="复制链接" Icon="Copy" />
+                <AppBarButton x:Name="ResizeButton1" Label="新窗口中打开链接" Icon="NewWindow"/>
+                <AppBarButton Label="后台打开链接" Icon="ClosePane"/>-->
+                <!--<AppBarButton x:Name="MoveButton1" Label="搜索链接文本内容" Icon="Find" />-->
+                <!--<AppBarButton x:Name="MuteButton" Label="对此标签页静音" Icon="Mute" Click="OnElementClicked" />-->
+                <!--<AppBarSeparator></AppBarSeparator>
+                <AppBarButton x:Name="oveButton1" Label="关闭所有标签页" Icon="Delete"/>-->
+                <!--<AppBarButton Label="关闭其他标签页" Icon="Clear" Click="OnElementClicked" />
+                        <AppBarButton Label="关闭其他标签页" Icon="ClearSelection" Click="OnElementClicked" />
+                        <AppBarButton Label="关闭其他标签页" Icon="ClosedCaption" Click="OnElementClicked" />
+                        <AppBarButton Label="关闭其他标签页" Icon="Cancel" Click="OnElementClicked" />
+                        <AppBarButton Label="关闭其他标签页" Icon="Delete" Click="OnElementClicked" />-->
+            </muxcontrols:CommandBarFlyout.SecondaryCommands>
+        </muxcontrols:CommandBarFlyout>
+    </UserControl.Resources>
     <Grid>
         <WebView x:Name="Webview" x:FieldModifier="public">
-            <FlyoutBase.AttachedFlyout>
-                <MenuFlyout x:Name="WebviewFlyout" x:FieldModifier="public">
-                    <MenuFlyoutItem Text="Open Link in another tap"/>
-                </MenuFlyout>
-            </FlyoutBase.AttachedFlyout>
         </WebView>
+        <Popup IsOpen="False" Margin="550,150,0,0">
+            <Grid>
+                <controls:DropShadowPanel IsMasked="True"
+                                          ShadowOpacity="0.2"
+                                          BlurRadius="50"
+                                          OffsetY="10">
+                    <Rectangle Fill="White" RadiusX="10" RadiusY="10"
+                               Width="300" Height="350"></Rectangle>
+                </controls:DropShadowPanel>
+                <StackPanel Orientation="Vertical"
+                            Height="350"
+                            Width="300"
+                            CornerRadius="10">
+                    <Grid Height="50">
+                        <TextBlock Text="bilibili.com"
+                                               Foreground="#FFAAAAAA"
+                                               HorizontalAlignment="Left" VerticalAlignment="Center"
+                                               Margin="10,0,0,0"></TextBlock>
+
+                        <TextBlock Text="隐藏预览"
+                                               Foreground="#FFAAAAAA"
+                                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                                               Margin="0,0,10,0"></TextBlock>
+                    </Grid>
+                    <Grid Height="300" Background="Gray">
+                        <WebView Source="https://www.bilibili.com" ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                                 Width="316"></WebView>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Popup>
     </Grid>
 </Page>

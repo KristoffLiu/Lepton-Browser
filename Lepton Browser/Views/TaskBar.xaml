@@ -602,7 +602,7 @@
                   AutomationProperties.AccessibilityView="Raw" />
                             </Border>
                             <Rectangle x:Name="FocusedBar" Grid.ColumnSpan="2"
-                                       Height="3" Fill="#FFFFFFFF"
+                                       Height="0" Fill="#FFFFFFFF"
                                        VerticalAlignment="Bottom"
                                        Margin="15,0,15,2"></Rectangle>
                             <FontIcon x:Name="FocusDeleteButton" Grid.Column="1"
@@ -642,7 +642,9 @@
                                             <ColumnDefinition></ColumnDefinition>
                                         </Grid.ColumnDefinitions>
                                         <Image Source="{x:Bind Avastar,Mode=OneWay}" Margin="0,0,0,0"></Image>
-                                        <TextBlock Grid.Column="1" Text="{x:Bind Title,Mode=OneWay}" Foreground="#FFFFFFFF" FontSize="14" Margin="10,0,0,0"></TextBlock>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind Title,Mode=OneWay}"
+                                                   Foreground="#FFFFFFFF"
+                                                   FontSize="14" Margin="10,0,0,0"></TextBlock>
                                     </Grid>
                                 </DataTemplate>
                             </ListView.ItemTemplate>
@@ -680,15 +682,15 @@
                             </Grid>-->
                         </ListView>
                 </ScrollViewer>
-                <Border Background="White" Width="1" Height="18" VerticalAlignment="Center"></Border>
+                <Border Background="Black" Visibility="Collapsed" Width="1" Height="18" VerticalAlignment="Center"></Border>
                 <Button Grid.Column="1" x:Name="AddTabButton" Width="28" Height="28" Padding="0"
                     Background="Transparent"
                     VerticalAlignment="Center"
                     Margin="5,0,10,1"
                     Click="{x:Bind ViewModel.AddButton_Click}">
                     <FontIcon FontFamily="Segoe MDL2 Assets"
-                                      Foreground="#FFFFFFFF" VerticalAlignment="Center"
-                                      FontSize="18"
+                                      Foreground="#FF000000" VerticalAlignment="Center"
+                                      FontSize="14"
                                       Glyph="&#xE710;"></FontIcon> <!--&#xF164;-->
                 </Button>
 

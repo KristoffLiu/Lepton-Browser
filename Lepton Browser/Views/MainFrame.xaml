@@ -25,8 +25,8 @@
                     </Grid.RowDefinitions>
                     <Grid>
                         <Grid x:Name="TitleBar"
-                          Background="#FF0064BE" Height="32" VerticalAlignment="Top">
-                            <!--FF7719AA FF4F67-->
+                          Background="#FFEEEEEE" Height="32" VerticalAlignment="Top">
+                            <!--FF7719AA FF4F67 FF0064BE-->
 
                             <!--<StackPanel Orientation="Horizontal" Margin="0,5,0,0">
                             <TextBlock Text="Google" FontWeight="Bold" Foreground="#FFFFFFFF" FontSize="14" Margin="15,0"></TextBlock>

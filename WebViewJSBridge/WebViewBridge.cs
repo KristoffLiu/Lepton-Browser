@@ -11,13 +11,13 @@ using Windows.UI.Xaml.Controls;
 namespace WebViewJSBridge
 {
     [AllowForWeb]
-    public sealed class WebViewBridge
+    public sealed class WebViewBridge : IWebViewModel
     {
-        WebView WebView;
+        IWebViewModel WebViewModel;
 
-        public void showMessage(string msg)
+        public WebViewBridge(IWebViewModel webViewModel)
         {
-            new MessageDialog(msg).ShowAsync();
+            this.WebViewModel = webViewModel;
         }
 
         /// <summary>
@@ -31,11 +31,13 @@ namespace WebViewJSBridge
         /// <param name="href"></param>
         /// <param name="image"></param>
         /// <param name="selection"></param>
-        public void showContextMenu(String webViewId, float x, float y,
+        public void ShowContextMenu(String webViewId, float x, float y,
                                     String nodeName, String subType,
                                     String href, String image, bool selection)
         {
-            Guid.Parse(webViewId)
+            WebViewModel.ShowContextMenu(webViewId, x, y,
+                                    nodeName, subType,
+                                    href, image, selection);
         }
     }
 }
