@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Lepton_Browser.ViewModels
 {
@@ -14,7 +15,7 @@ namespace Lepton_Browser.ViewModels
         public PageViewModelBase()
         {
             All.Add(this);
-            Theme = Models.Personalization.Theme;
+            Theme = Models.PersonalizationService.Theme;
         }
 
         public static void SwitchTheme(ElementTheme elementTheme)

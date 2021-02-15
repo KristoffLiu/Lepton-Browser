@@ -23,14 +23,14 @@ namespace Lepton_Browser.ViewModels.Personalization
             }
         }
 
-        int _BackgroundImageViewModelIndex = Models.Personalization.BackgroundImageIndex;
+        int _BackgroundImageViewModelIndex = Models.PersonalizationService.BackgroundImageIndex;
         public int BackgroundImageViewModelIndex
         {
             get { return _BackgroundImageViewModelIndex; }
             set
             {
                 Set(ref _BackgroundImageViewModelIndex, value);
-                Models.Personalization.BackgroundImageIndex = value;
+                Models.PersonalizationService.BackgroundImageIndex = value;
             }
         }
     }

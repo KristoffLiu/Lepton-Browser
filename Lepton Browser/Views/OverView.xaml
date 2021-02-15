@@ -10,12 +10,13 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:viewmodels="using:Lepton_Browser.ViewModels"
     mc:Ignorable="d"
+    SizeChanged="Page_SizeChanged"
     >
     <Page.Resources>
         <media:AcrylicBrush x:Key="TitleBarAcrylicBackgroundBrush" BackgroundSource="Backdrop"
                                         TintOpacity="0.25" TintColor="#FFFFFFFF" FallbackColor="#FFFFFFFF" />
         <media:AcrylicBrush x:Key="CustomAcrylicBackgroundBrush" BackgroundSource="HostBackdrop"
-                                        TintOpacity="0.45" TintColor="#FFFFFFFF" FallbackColor="#FFFFFFFF" />
+                                        TintOpacity="0.7" TintColor="#FFEEEEEE" FallbackColor="#FFEEEEEE" />
 
         <Style TargetType="GridViewItem" x:Key="TaskGridViewItemStyle">
             <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
@@ -26,7 +27,7 @@
             <Setter Property="IsHoldingEnabled" Value="True" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,4,4" />
+            <Setter Property="Margin" Value="0,0,30,4" />
             <Setter Property="MinWidth" Value="{ThemeResource GridViewItemMinWidth}" />
             <Setter Property="MinHeight" Value="{ThemeResource GridViewItemMinHeight}" />
             <Setter Property="AllowDrop" Value="False" />
@@ -429,7 +430,7 @@
                                 </VisualStateGroup>
 
                             </VisualStateManager.VisualStateGroups>
-                            <controls:DropShadowPanel Margin="16,30,0,10" ShadowOpacity="0.05" BlurRadius="13" OffsetY="3"
+                            <controls:DropShadowPanel Margin="16,00,0,10" ShadowOpacity="0.05" BlurRadius="13" OffsetY="3"
                                                       HorizontalContentAlignment="Stretch"
                                                       VerticalContentAlignment="Stretch">
                                 <Grid></Grid>
@@ -1566,16 +1567,16 @@
         <ScrollViewer VerticalScrollBarVisibility="Hidden"
                       ViewChanged="TimeLineScrollViewer_ViewChanged"
                       x:Name="TimeLineScrollViewer"
-                      Margin="0,0,150,0" Style="{StaticResource LeptonViewScrollStyle}">
+                      Margin="0,0,0,0" Padding="0,60,0,0" Style="{StaticResource LeptonViewScrollStyle}">
             <!--VerticalScrollBarVisibility="Hidden"-->
-            <StackPanel Padding="0,10,0,0">
+            <StackPanel Padding="0,60,0,0">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="现在" FontSize="20" FontWeight="Bold" Margin="25,20,0,0"></TextBlock>
-                    <TextBlock Text="15:50" VerticalAlignment="Bottom" Margin="10,20,0,0"></TextBlock>
-                    <TextBlock Text="正在充电 满" VerticalAlignment="Bottom" Margin="10,20,0,0"></TextBlock>
+                    <TextBlock Text="现在" FontSize="20" Visibility="Collapsed" FontWeight="Bold" Margin="25,20,0,0"></TextBlock>
                 </StackPanel>
 
-                <GridView Style="{StaticResource GridViewStyle}" x:Name="TabsAdaptiveGridView"
+                <GridView x:Name="TabsGridView"
+                          x:FieldModifier="public"
+                          Style="{StaticResource GridViewStyle}" 
                           ItemContainerStyle="{StaticResource TaskGridViewItemStyle}"
                           Loaded="{x:Bind ViewModel.TabsAdaptiveGridView_Loaded}"
                           AllowDrop="True"
@@ -1585,34 +1586,44 @@
                           DropCompleted="{x:Bind ViewModel.TabsAdaptiveGridView_DropCompleted}"
                           ItemClick="{x:Bind ViewModel.TabsAdaptiveGridView_ItemClick}"
                           IsItemClickEnabled="True"
-                          ItemsSource="{x:Bind ViewModel.TaskBarViewItems,Mode=TwoWay}"
+                          ItemsSource="{x:Bind ViewModel.TabGridViewItems,Mode=TwoWay}"
                           SelectedItem="0"
-                          Margin="5,10,5,0" Padding="0,0,0,0">
+                          HorizontalAlignment="Left"
+                          Margin="20,0,0,0" Padding="0,0,0,0">
+                    <GridView.RenderTransform>
+                        <CompositeTransform x:Name="TabsGridViewTransform" x:FieldModifier="public"></CompositeTransform>
+                    </GridView.RenderTransform>
                     <GridView.ItemTemplate>
-                        <DataTemplate x:DataType="viewmodels:TaskBarItemViewModel">
-                            <Grid Margin="5" VerticalAlignment="Center"><!--PointerPressed="{x:Bind Grid_PointerPressed}"-->
+                        <DataTemplate x:DataType="viewmodels:TabGridViewItemViewModel">
+                            <Grid Width="{x:Bind Width,Mode=OneWay}" Height="{x:Bind Height,Mode=OneWay}" Margin="0,0,0,10" VerticalAlignment="Center"
+                                  Background="White"
+                                  CornerRadius="8"><!--PointerPressed="{x:Bind Grid_PointerPressed}"-->
                                 <Grid VerticalAlignment="Top">
-                                    <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Left" Margin="15,0,0,10">
-                                        <Image Source="{x:Bind Avastar, Mode=OneWay}" Width="20" Height="20" Stretch="UniformToFill" Margin="5,0,10,0"></Image>
-                                        <TextBlock Text="{x:Bind Title,Mode=OneWay}"
-                                                                       Foreground="Black"
-                                                                       TextAlignment="Center"></TextBlock>
+                                    <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal"
+                                                HorizontalAlignment="Left" Margin="0,0,0,10">
+                                        <Image Source="{x:Bind Avastar, Mode=OneWay}" Width="20" Height="20" Stretch="UniformToFill" Margin="10,0,10,0"></Image>
                                     </StackPanel>
+                                    <TextBlock Text="{x:Bind Title,Mode=OneWay}"
+                                               Margin="0,5,0,0"
+                                               HorizontalAlignment="Center"
+                                               Foreground="Black"
+                                               TextAlignment="Center"></TextBlock>
                                     <Button x:Name="TabCloseButton"
-                                                Foreground="#FFFFFFFF"
+                                                Foreground="#FF000000"
                                                 Background="Transparent"
                                                 VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                                                
-                                                Visibility="Collapsed" Click="{x:Bind TabAdaptiveGridViewCloseButton_Click}">
+                                                Margin="0,0,5,0"
+                                                Visibility="Visible" Click="{x:Bind TabAdaptiveGridViewCloseButton_Click}">
                                         <FontIcon FontFamily="Segoe MDL2 Assets"
                                                       FontSize="12"
                                                       Glyph="&#xE894;" Margin="0,0,0,9"></FontIcon>
                                     </Button>
                                 </Grid>
-                                <Grid Margin="15,30,0,10" VerticalAlignment="Bottom">
-                                    <Grid Width="275" Height="200"
+                                <Grid Margin="0,30,0,10" VerticalAlignment="Bottom">
+                                    <Grid
                                           Background="#FFFFFFFF"
                                           VerticalAlignment="Center"
+                                          CornerRadius="10"
                                           PointerEntered="{x:Bind AdaptiveGridView_PointerEntered}"
                                           PointerExited="{x:Bind AdaptiveGridView_PointerExited}">
                                         <Image HorizontalAlignment="Center" x:Name="TabsAdaptiveGridViewImage"
@@ -1626,15 +1637,90 @@
                 </GridView>
             </StackPanel>
         </ScrollViewer>
-        <Grid x:Name="TimeLineSliderGrid"  Margin="0,40,76,30" Grid.Row="1">
+        <Grid x:Name="TimeLineSliderGrid"  Margin="0,100,76,30" Grid.Row="1" Visibility="Collapsed">
             <TextBlock Text="当前" TextAlignment="Right" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,32,0,0"></TextBlock>
             <TextBlock x:Name="GlobalTimeLineLastTimeText" Text="今天早些时候" TextWrapping="WrapWholeWords" TextAlignment="Right" FontSize="14" HorizontalAlignment="Right" Grid.RowSpan="3" Grid.ColumnSpan="3" VerticalAlignment="Bottom"></TextBlock>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Background="Transparent" Margin="0,-15,-45,0">
-                <FontIcon FontFamily="Segoe MDL2 Assets" FontSize="22" Glyph="&#xE721;" Margin="0,0,0,0" HorizontalAlignment="Left"/>
-            </Button>
             <Slider x:Name="TimeLineSlider" Style="{StaticResource SliderStyle}" IsDirectionReversed="True"
                     Background="Black" Foreground="Black"
-                    Orientation="Vertical" HorizontalAlignment="Right" Margin="0, 30, -50, 0"></Slider>
+                    Orientation="Vertical" HorizontalAlignment="Right" Margin="0, 0, -50, 0"></Slider>
+        </Grid>
+        <Grid x:Name="OverViewHeader" x:FieldModifier="public" Opacity="0"  Background="#BBEEEEEE" VerticalAlignment="Top"
+              Height="90">
+            <Grid.Resources>
+                <Storyboard x:Name="OverViewHeaderFadeIn"
+                            x:FieldModifier="public"
+                    Duration="0:0:1"
+                    AutoReverse="True"
+                    RepeatBehavior="Forever">
+                    <DoubleAnimation
+                        Storyboard.TargetName="OverViewHeader"
+                        Storyboard.TargetProperty="Opacity"
+                        From="0"
+                        To="1"
+                        BeginTime="0:0:1.5"
+                        Duration="0:0:1.5"
+                        >
+                        <DoubleAnimation.EasingFunction>
+                            <CircleEase EasingMode="EaseIn"></CircleEase>
+                            <!--缓动函数-->
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+                <Storyboard x:Name="OverViewHeaderFadeOut"
+                            x:FieldModifier="public"
+                            Duration="0:0:1"
+                            AutoReverse="True"
+                            RepeatBehavior="Forever">
+                    <DoubleAnimation
+                        Storyboard.TargetName="OverViewHeader"
+                        Storyboard.TargetProperty="Opacity"
+                        From="1"
+                        To="0"
+                        BeginTime="0:0:1.5"
+                        Duration="0:0:1.5"
+                        >
+                        <DoubleAnimation.EasingFunction>
+                            <CircleEase EasingMode="EaseOut"></CircleEase>
+                            <!--缓动函数-->
+                        </DoubleAnimation.EasingFunction>
+                    </DoubleAnimation>
+                </Storyboard>
+            </Grid.Resources>
+            <Grid.RenderTransform>
+                <CompositeTransform x:Name="OverViewHeaderTransform" x:FieldModifier="public"></CompositeTransform>
+            </Grid.RenderTransform>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="时间线" FontWeight="Bold"
+                       FontSize="20" VerticalAlignment="Top"
+                       Margin="30,10,0,0"></TextBlock>
+            <TextBox Width="250" VerticalAlignment="Bottom"
+                     Margin="23,0,0,10" CornerRadius="6"
+                     BorderThickness="0"
+                     Background="#FFCCCCCC"
+                     PlaceholderText="在时间线中搜索标签页"
+                     ></TextBox>
+            <StackPanel Orientation="Horizontal" Grid.Column="2"
+                        VerticalAlignment="Bottom"
+                        Margin="0,0,10,10">
+                <Button Content="无痕浏览" Background="Transparent"
+                        Foreground="Black"
+                        Margin="10 0"></Button>
+                <Button Background="Transparent"
+                        Margin="10 0">
+                    <FontIcon FontFamily="Segoe MDL2 Assets"
+                              Foreground="Black" VerticalAlignment="Center"
+                              FontSize="14"
+                              Glyph="&#xE710;"></FontIcon>
+                </Button>
+                <Button Content="完成"
+                        Background="Transparent"
+                        Foreground="Black"
+                        Margin="10 0"></Button>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

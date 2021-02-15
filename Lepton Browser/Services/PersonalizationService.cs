@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace Lepton_Browser.Models
 {
-    public class Personalization
+    public class PersonalizationService
     {
 
         public static bool IsNightMode

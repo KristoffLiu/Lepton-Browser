@@ -14,9 +14,11 @@ namespace Lepton_Browser.ViewModels
     public class TabPageViewModel : PageViewModelBase
     {
         public static TabPageViewModel Current;
-        public TabPageViewModel()
+        public TabPage View;
+        public TabPageViewModel(TabPage view)
         {
             Current = this;
+            View = view;
             webFrameItems.CollectionChanged += webFrameItems_CollectionChanged;
         }
 
@@ -36,32 +38,24 @@ namespace Lepton_Browser.ViewModels
             
         }
 
-        public void Add(TabPageInfo tabPageInfo)
+        public void Add(TabPageFrameItemViewModel itemViewModel)
         {
-            var _viewmodel = new TabPageFrameItemViewModel()
-            {
-                ID = tabPageInfo.ID,
-                Category = tabPageInfo.Category,
-                Title = tabPageInfo.Title,
-                Avastar = tabPageInfo.Avastar,
-                Uri = tabPageInfo.Url
-            };
             var newframe = new Frame();
-            newframe.Tag = _viewmodel.ID;
-            if (_viewmodel.Category == TabPageCategory.FormPage)
+            newframe.Tag = itemViewModel.ID;
+            if (itemViewModel.Category == TabPageCategory.FormPage)
             {
                 
             }
-            else if(_viewmodel.Category == TabPageCategory.WebPage)
+            else if(itemViewModel.Category == TabPageCategory.WebPage)
             {
-                newframe.Navigate(typeof(WebPage), tabPageInfo);
+                newframe.Navigate(typeof(WebPage), itemViewModel);
             }
             TabPageFrameGrid.Children.Add(newframe);
-            webFrameItems.Add(_viewmodel);
-            HideAndShow(_viewmodel.ID);
+            webFrameItems.Add(itemViewModel);
+            HideAndShow(itemViewModel.ID);
         }
 
-        public void Switch(Guid tab_id)
+        public void Select(Guid tab_id)
         {
             HideAndShow(tab_id);
         }
@@ -138,11 +132,28 @@ namespace Lepton_Browser.ViewModels
         string _Avastar;
         string _uri;
 
+        public TabPageFrameItemViewModel(TabModel tabModel)
+        {
+            ID          = tabModel.ID;
+            Window_ID   = tabModel.Windows_ID;
+            Category    = tabModel.Category;
+            Title       = tabModel.Title;
+            Avastar     = tabModel.Avastar;
+            Uri         = tabModel.Url;
+        }
+
         public Guid ID
         {
             get { return _ID; }
             set { Set(ref _ID, value); }
         }
+
+        public Guid Window_ID
+        {
+            get { return _ID; }
+            set { Set(ref _ID, value); }
+        }
+
         public TabPageCategory Category
         {
             get { return _category; }

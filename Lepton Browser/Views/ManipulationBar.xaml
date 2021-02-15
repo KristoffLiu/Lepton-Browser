@@ -161,9 +161,11 @@
                                     <VisualState x:Name="ButtonCollapsed"/>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Border x:Name="BorderElement" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2" Grid.RowSpan="1" Grid.Row="1"/>
+                            <Border x:Name="BorderElement" Background="{TemplateBinding Background}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Grid.ColumnSpan="2" Grid.RowSpan="1" Grid.Row="1"/>
                             <ContentPresenter x:Name="HeaderContentPresenter" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Grid.ColumnSpan="2" FontWeight="Normal" Foreground="{ThemeResource TextControlHeaderForeground}" Margin="0,0,0,8" Grid.Row="0" TextWrapping="{TemplateBinding TextWrapping}" Visibility="Collapsed" x:DeferLoadStrategy="Lazy"/>
-                            <ScrollViewer x:Name="ContentElement" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsTabStop="False" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.Row="1" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" ZoomMode="Disabled"/>
+                            <ScrollViewer x:Name="ContentElement" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.AccessibilityView="Raw" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsTabStop="False" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.Row="1" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" ZoomMode="Disabled"/>
                             <TextBlock x:Name="PlaceholderTextContentPresenter" VerticalAlignment="Center" Grid.ColumnSpan="2" Foreground="{Binding PlaceholderForeground, RelativeSource={RelativeSource Mode=TemplatedParent}, TargetNullValue={ThemeResource TextControlPlaceholderForeground}}" IsHitTestVisible="False" Margin="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}" Grid.Row="1" Text="{TemplateBinding PlaceholderText}" TextWrapping="{TemplateBinding TextWrapping}" TextAlignment="{TemplateBinding TextAlignment}"/>
                             <Button x:Name="DeleteButton" AutomationProperties.AccessibilityView="Raw" BorderThickness="{TemplateBinding BorderThickness}" Grid.Column="1" FontSize="{TemplateBinding FontSize}" IsTabStop="False" MinWidth="34" Margin="{ThemeResource HelperButtonThemePadding}" Grid.Row="1" Style="{StaticResource DeleteButtonStyle}" VerticalAlignment="Stretch" Visibility="Collapsed"/>
                         </Grid>
@@ -234,32 +236,14 @@
                  TextWrapping="NoWrap"
                  BorderThickness="0"
                  Text="{x:Bind ViewModel.InteliSenseBoxText,Mode=TwoWay}"
-                 Background="Transparent"
+                 Background="#FFEEEEEE"
                  VerticalAlignment="Center"
                  Margin="0,0,0,0"
                  PlaceholderText="搜索或输入网址"
                  PlaceholderForeground="#FF666666"
                  Visibility="Visible"  
+                 CornerRadius="7"
                  IsSpellCheckEnabled="False"
                  KeyDown="{x:Bind ViewModel.IndexInteliSenseBox_KeyDown}"     ></TextBox>
-        <!--<TextBox Style="{StaticResource TextBoxStyle}" Grid.Column="1"
-                 x:Name="InteliSenseBox"
-                 TextWrapping="NoWrap"
-                 BorderThickness="0"
-                 Height="35"
-                 Text="{x:Bind InteliSenseBoxText,Mode=TwoWay}"
-                 Background="{ThemeResource InteliSenseSuggestBoxAcrylicBackgroundBrush}"
-                 Tapped="IndexInteliSenseBox_Tapped"
-                 TextChanged="IndexIntelliSenseBox_TextChanged"
-                 GotFocus="IndexInteliSenseBox_GotFocus"
-                 LostFocus="IndexInteliSenseBox_LostFocus"
-                 VerticalAlignment="Center"
-                 Margin="0,0,0,0"
-                 PlaceholderText="搜索或输入网址"
-                 PlaceholderForeground="#FF666666"
-                 Visibility="Visible"
-                 KeyDown="IndexInteliSenseBox_KeyDown"     
-                 IsSpellCheckEnabled="False">
-            </TextBox>-->
     </Grid>
 </Page>

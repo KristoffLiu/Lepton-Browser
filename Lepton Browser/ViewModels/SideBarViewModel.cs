@@ -1,4 +1,5 @@
-﻿using Lepton_Library.Common;
+﻿using Lepton_Browser.Views;
+using Lepton_Library.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,10 @@ namespace Lepton_Browser.ViewModels
     public class SideBarViewModel : PageViewModelBase
     {
         public static SideBarViewModel Current;
-        public SideBarViewModel()
+        public SideBar View;
+        public SideBarViewModel(SideBar view)
         {
+            View = view;
             Current = this;
         }
 

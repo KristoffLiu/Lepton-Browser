@@ -8,15 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Lepton_Browser.Services;
 
 namespace Lepton_Browser.ViewModels
 {
     public class ManipulationBarViewModel : PageViewModelBase
     {
         public static ManipulationBarViewModel Current;
-        public ManipulationBarViewModel()
+        public ManipulationBar View;
+        public ManipulationBarViewModel(ManipulationBar manipulationBar)
         {
             Current = this;
+            View = manipulationBar;
         }
         public Guid ID;
 
@@ -76,8 +79,9 @@ namespace Lepton_Browser.ViewModels
 
         public void GlobalTimeLineButton_Click()
         {
-            MainFrameViewModel.SwitchTaskView(ID);
+            MainFrameViewModel.OpenTimeLine();
         }
+
         public void TabsGridButton_Click()
         {
 
@@ -85,7 +89,7 @@ namespace Lepton_Browser.ViewModels
         public void ExpandMoreAppBarButton_Click()
         {
             MainFrame.Current.ViewModel.IsSideBarPaneOpen = true;
-            SideBarViewModel.Current.Update(AppManager.Current.Active_Tab_ID);
+            SideBarViewModel.Current.Update(TabsService.Current.Active_Tab_ID);
         }
 
         public void Update(TabPageInfoExpansion tabPageInfoExpansion)
@@ -108,11 +112,6 @@ namespace Lepton_Browser.ViewModels
                 Navigate(((TextBox)sender).Text);
             }
         }
-
-        //public void UpdateWhenSwitch(TabPageInfoExpansion tabPageInfoExpansion)
-        //{
-        //    Update(tabPageInfoExpansion);
-        //}
     }
 
     public class TabPageInfoExpansion

@@ -8,50 +8,54 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <UserControl.Resources>
-        <muxcontrols:CommandBarFlyout x:Name="ContextMenuFlyout" x:FieldModifier="public">
-            <AppBarButton Label="分享" Icon="Copy"/>
-            <AppBarButton Label="收藏" Icon="NewWindow"/>
-            <AppBarButton Label="关闭" Icon="ClosePane"/>
-            <AppBarButton Label="查找" Icon="Find"/>
-            <AppBarButton Label="收藏" Icon="Favorite"/>
-            <muxcontrols:CommandBarFlyout.SecondaryCommands>
-                <AppBarElementContainer>
-                    <StackPanel Orientation="Vertical"
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <ResourceDictionary>
+                    <CornerRadius x:Key="CornerRadius">20</CornerRadius>
+                    <CornerRadius x:Key="OverlayCornerRadius">20</CornerRadius>
+                    <CornerRadius x:Key="ControlCornerRadius">20</CornerRadius>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Resources>
+            <muxcontrols:CommandBarFlyout x:Name="ContextMenuFlyout"
+                                      x:FieldModifier="public"
+                                      >
+                <AppBarButton Label="分享" Icon="Copy"/>
+                <AppBarButton Label="收藏" Icon="NewWindow"/>
+                <AppBarButton Label="关闭" Icon="ClosePane"/>
+                <AppBarButton Label="查找" Icon="Find"/>
+                <AppBarButton Label="收藏" Icon="Favorite"/>
+                <muxcontrols:CommandBarFlyout.SecondaryCommands>
+                    <AppBarElementContainer>
+                        <StackPanel Orientation="Vertical"
                                 Height="340"
                                 Width="300">
-                        <Grid Height="40">
-                            <TextBlock Text="bilibili.com"
+                            <Grid Height="40">
+                                <TextBlock Text="bilibili.com"
                                                Foreground="#FFAAAAAA"
                                                HorizontalAlignment="Left" VerticalAlignment="Center"
                                                Margin="10,0,0,2"></TextBlock>
 
-                            <TextBlock Text="隐藏预览"
+                                <TextBlock Text="隐藏预览"
                                                Foreground="#FFAAAAAA"
                                                HorizontalAlignment="Right" VerticalAlignment="Center"
                                                Margin="0,0,10,2"></TextBlock>
-                        </Grid>
-                        <Grid Height="300" Background="Gray">
-                            <WebView Source="https://www.bilibili.com" ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                            </Grid>
+                            <Grid Height="300" Background="Gray">
+                                <WebView Source="https://www.bilibili.com" ScrollViewer.VerticalScrollBarVisibility="Hidden"
                                      Width="316"></WebView>
-                        </Grid>
-                    </StackPanel>
-                </AppBarElementContainer>
-                <!--<AppBarButton x:Name="CopyButton" Label="复制链接" Icon="Copy" />
-                <AppBarButton x:Name="ResizeButton1" Label="新窗口中打开链接" Icon="NewWindow"/>
-                <AppBarButton Label="后台打开链接" Icon="ClosePane"/>-->
-                <!--<AppBarButton x:Name="MoveButton1" Label="搜索链接文本内容" Icon="Find" />-->
-                <!--<AppBarButton x:Name="MuteButton" Label="对此标签页静音" Icon="Mute" Click="OnElementClicked" />-->
-                <!--<AppBarSeparator></AppBarSeparator>
-                <AppBarButton x:Name="oveButton1" Label="关闭所有标签页" Icon="Delete"/>-->
-                <!--<AppBarButton Label="关闭其他标签页" Icon="Clear" Click="OnElementClicked" />
-                        <AppBarButton Label="关闭其他标签页" Icon="ClearSelection" Click="OnElementClicked" />
-                        <AppBarButton Label="关闭其他标签页" Icon="ClosedCaption" Click="OnElementClicked" />
-                        <AppBarButton Label="关闭其他标签页" Icon="Cancel" Click="OnElementClicked" />
-                        <AppBarButton Label="关闭其他标签页" Icon="Delete" Click="OnElementClicked" />-->
-            </muxcontrols:CommandBarFlyout.SecondaryCommands>
-        </muxcontrols:CommandBarFlyout>
-    </UserControl.Resources>
-    <Grid>
+                                <Grid Background="Transparent"></Grid>
+                            </Grid>
+                        </StackPanel>
+                    </AppBarElementContainer>
+                </muxcontrols:CommandBarFlyout.SecondaryCommands>
+            </muxcontrols:CommandBarFlyout>
+
+        </Grid.Resources>
         <WebView x:Name="Webview" x:FieldModifier="public">
         </WebView>
         <Popup IsOpen="False" Margin="550,150,0,0">

@@ -10,23 +10,24 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
+using Lepton_Browser.Views;
+using Lepton_Browser.Services;
 
 namespace Lepton_Browser.ViewModels
 {
-    public class TabsSetViewModel : PageViewModelBase
+    public class TaskBarViewModel : PageViewModelBase
     {
-        public static TabsSetViewModel Current;
-        public TabsSetViewModel()
-        {
-            Current = this;
-            //Add(Guid.NewGuid(), "http://www.baidu.com", "title");
-        }
+        public static TaskBarViewModel Current;
+        public TaskBar View;
 
-        public void InputListView(ListView listView)
+        public TaskBarViewModel(TaskBar view)
         {
-            listView.SelectionChanged += ListView_SelectionChanged;
-            TaskBarListView = listView;
-        }
+            View = view;
+            Current = this;
+            TaskBarListView = View.TaskBarListView;
+            TaskBarListView.SelectionChanged += ListView_SelectionChanged;
+            //Add(Guid.NewGuid(), "http://www.baidu.com", "title");
+        }        
 
         public Guid Window_ID;
         public ListView TaskBarListView;
@@ -38,26 +39,13 @@ namespace Lepton_Browser.ViewModels
             TaskBarGridView = gridView;
         }
 
-
-
-        public string AvastarUri(string _uri)
+        public void Add(TaskBarItemViewModel itemViewModel)
         {
-            var __uri = new Uri(_uri);
-            return __uri.Scheme + "://" + __uri.Host.ToString() + "/favicon.ico";
+            TaskBarViewItems.Add(itemViewModel);
+            TaskBarListView.SelectedItem = itemViewModel;
         }
 
-
-
-
-        public void Add(Guid id,string uri, string title)
-        {
-            var newuri = AvastarUri(uri);
-            var item = new TaskBarItemViewModel() { Id = id, Avastar = newuri , Title = title };
-            TaskBarViewItems.Add(item);
-            TaskBarListView.SelectedItem = item;
-        }
-
-        public void Switch(Guid tab_id)
+        public void Select(Guid tab_id)
         {
             TaskBarItemViewModel switchitem = null;
             foreach(var item in TaskBarViewItems)
@@ -73,14 +61,14 @@ namespace Lepton_Browser.ViewModels
             }
         }
 
-        public void Update(TabPageInfo tabPageInfo)
+        public void Update(TaskBarItemViewModel taskBarItemViewModel)
         {
             foreach (var item in TaskBarViewItems)
             {
-                if (item.Id == tabPageInfo.ID)
+                if (item.Id == taskBarItemViewModel.Id)
                 {
-                    item.Title = tabPageInfo.Title == null ? item.Title : tabPageInfo.Title;
-                    item.Avastar = tabPageInfo.Avastar == null ? item.Avastar : AvastarUri(tabPageInfo.Avastar);
+                    item.Title = taskBarItemViewModel.Title == null ? item.Title : taskBarItemViewModel.Title;
+                    item.Avastar = taskBarItemViewModel.Avastar == null ? item.Avastar : taskBarItemViewModel.AvastarUri(taskBarItemViewModel.Avastar);
                 }
             }
         }
@@ -114,7 +102,7 @@ namespace Lepton_Browser.ViewModels
                     }
                     else
                     {
-                                AppManager.Current.AddNewTabPage("新建标签页", "https://www.baidu.com");
+                        TabsService.Current.Add("新建标签页", "https://www.baidu.com");
                     }
                 }
                 else
@@ -144,19 +132,19 @@ namespace Lepton_Browser.ViewModels
             var listview = sender as ListView;
                 if (TaskBarListView.SelectedItem != null)
                 {
-                    AppManager.Current.SwitchTabPage(((TaskBarItemViewModel)TaskBarListView.SelectedItem).Id);
+                    TabsService.Current.Select(((TaskBarItemViewModel)TaskBarListView.SelectedItem).Id);
                 }
         }
 
         public void AddButton_Click()
         {
-            AppManager.Current.AddNewTabPage("新建标签页", "https://www.baidu.com");
+            TabsService.Current.Add("新建标签页", "https://www.baidu.com");
         }
 
         public void FocusDeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var fonticon = sender as FontIcon;
-            AppManager.Current.DeleteTabPage(((TaskBarItemViewModel)fonticon.DataContext).Id);
+            TabsService.Current.Delete(((TaskBarItemViewModel)fonticon.DataContext).Id);
         }
 
         public void UpdateCaptureScreenShot(Guid tab_id, BitmapSource bitmapImage)
@@ -174,7 +162,7 @@ namespace Lepton_Browser.ViewModels
         {
             Image result = null;
             Guid active_id;
-            active_id = AppManager.Current.Active_Tab_ID;
+            active_id = TabsService.Current.Active_Tab_ID;
             foreach(var taskbargridviewitem in ((ItemsWrapGrid)Current.TaskBarGridView.ItemsPanelRoot).Children)
             {
                 if ( ((TaskBarItemViewModel)Current.TaskBarGridView.Items[((ItemsWrapGrid)Current.TaskBarGridView.ItemsPanelRoot).Children.IndexOf(taskbargridviewitem)]).Id == active_id)
@@ -201,7 +189,6 @@ namespace Lepton_Browser.ViewModels
             get { return _TaskViewHeadlineVisibility; }
             set { Set(ref _TaskViewHeadlineVisibility, value); }
         }
-
 
         public static void SwitchTaskView()
         {
@@ -234,8 +221,8 @@ namespace Lepton_Browser.ViewModels
         public void TabsAdaptiveGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
             var clickeditem = e.ClickedItem as TaskBarItemViewModel;
-            AppManager.Current.SwitchTabPage(clickeditem.Id);
-            MainFrameViewModel.SwitchTaskView(Window_ID);
+            TabsService.Current.Select(clickeditem.Id);
+            //MainFrameViewModel.SwitchTaskView(Window_ID);
         }
     }
 
@@ -245,6 +232,19 @@ namespace Lepton_Browser.ViewModels
         string _Title;
         BitmapSource _CapturedImage;
         Guid _Id;
+
+        public TaskBarItemViewModel(TabModel tabModel)
+        {
+            Id = tabModel.ID;
+            Avastar = tabModel.Avastar;
+            Title = tabModel.Title;
+        }
+
+        public Guid Id
+        {
+            get { return _Id; }
+            set { Set(ref _Id, value); }
+        }
 
         public string Avastar
         {
@@ -261,10 +261,11 @@ namespace Lepton_Browser.ViewModels
             get { return _CapturedImage; }
             set { Set(ref _CapturedImage, value); }
         }
-        public Guid Id
+
+        public string AvastarUri(string _uri)
         {
-            get { return _Id; }
-            set { Set(ref _Id, value); }
+            var __uri = new Uri(_uri);
+            return __uri.Scheme + "://" + __uri.Host.ToString() + "/favicon.ico";
         }
 
         public void Grid_PointerPressed()
@@ -286,6 +287,5 @@ namespace Lepton_Browser.ViewModels
         {
 
         }
-
     }
 }

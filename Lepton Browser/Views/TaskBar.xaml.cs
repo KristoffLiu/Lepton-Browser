@@ -1,4 +1,5 @@
 ﻿using Lepton_Browser.Models;
+using Lepton_Browser.Services;
 using Lepton_Browser.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -21,15 +22,15 @@ namespace Lepton_Browser.Views
 {
     public sealed partial class TaskBar : UserControl
     {
-        public TabsSetViewModel ViewModel;
+        public TaskBarViewModel ViewModel;
         public static TaskBar Current;
+
         public TaskBar()
         {
             Current = this;
             DataContext = ViewModel;
             this.InitializeComponent();
-            TabsSetViewModel.Current.InputListView(TaskBarListView);
-            ViewModel = TabsSetViewModel.Current;
+            ViewModel = new TaskBarViewModel(this);
         }
 
         private void FocusDeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -61,7 +62,7 @@ namespace Lepton_Browser.Views
 
         private void CloseButton_Clicked(object sender, RoutedEventArgs e)
         {
-            AppManager.Current.DeleteTabPage(((TaskBarItemViewModel)se.DataContext).Id);
+            TabsService.Current.Delete(((TaskBarItemViewModel)se.DataContext).Id);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Lepton_Browser.Views
 
         public ManipulationBar()
         {
-            ViewModel = ManipulationBarViewModel.Current;
+            ViewModel = new ManipulationBarViewModel(this);
             DataContext = ViewModel;
             this.InitializeComponent();
         }

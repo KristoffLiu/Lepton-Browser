@@ -15,15 +15,14 @@ namespace Lepton_Browser.ViewModels
     public class MainFrameViewModel : PageViewModelBase
     {
         public static MainFrameViewModel Current;
+
+        public MainFrame View;
         public OverView TaskView;
         public Grid MainFrame_Grid;
-        public MainFrameViewModel() //OverView taskView, Grid grid
+        public MainFrameViewModel(MainFrame mainFrame) //OverView taskView, Grid grid
         {
+            this.View = mainFrame;
             Current = this;
-            ManipulationBarViewModel = new ManipulationBarViewModel();
-            SideBarViewModel = new SideBarViewModel();
-            TabPageViewModel = new TabPageViewModel();
-            TabsSetViewModel = new TabsSetViewModel();
         }
 
         public void InputUserControl(OverView taskView, Grid grid)
@@ -32,10 +31,10 @@ namespace Lepton_Browser.ViewModels
             MainFrame_Grid = grid;
         }
 
-        public ManipulationBarViewModel ManipulationBarViewModel { get; set; }
-        public SideBarViewModel SideBarViewModel { get; set; }
-        public TabPageViewModel TabPageViewModel { get; set; }
-        public TabsSetViewModel TabsSetViewModel { get; set; }
+        //public ManipulationBarViewModel ManipulationBarViewModel { get; set; }
+        //public SideBarViewModel SideBarViewModel { get; set; }
+        //public TabPageViewModel TabPageViewModel { get; set; }
+        //public TabsSetViewModel TabsSetViewModel { get; set; }
 
 
         bool _IsSideBarPaneOpen = false;
@@ -60,75 +59,173 @@ namespace Lepton_Browser.ViewModels
             set { Set(ref _isTaskViewVisible, value); }
         }
 
-        public static void SwitchTaskView(Guid windows_id)
+        public bool isAnimating = false;
+
+        public static void OpenTimeLine()
         {
-            Current.SwitchTaskView();
+            Current.openTimeLine();
         }
 
-        public void SwitchTaskView()
+        public void openTimeLine()
         {
-            if (IsTaskViewVisible == false)
+            if (isAnimating) return;
+            OverViewViewModel.Current.ScrollIntoView();
+            UpdateTransform(1, 0, 0);
+            AnimateToList(false);
+        }
+        private void UpdateTransform(double scale, double offsetX, double offsetY)
+        {
+            
+            //if (scale < minScale) scale = minScale;
+            //if (scale > 1) scale = 1;
+
+            offsetX = offsetX * scale;
+            offsetY = offsetY * scale;
+
+            View.BrowserSplitViewTransform.TranslateX = offsetX;
+            View.BrowserSplitViewTransform.TranslateY = offsetY;
+            View.BrowserSplitViewTransform.ScaleX = scale;
+            View.BrowserSplitViewTransform.ScaleY = scale;
+
+            OverViewViewModel.Current.UpdateTransform(scale, offsetX, offsetY);
+        }
+
+        private void AnimateToList(bool fromTouch = true)
+        {
+            isAnimating = true;
+
+            var selectScaleX = OverViewViewModel.Current.GridViewItemWidth / View.ActualWidth;
+            var selectScaleY = OverViewViewModel.Current.GridViewItemHeight / View.ActualHeight;
+            var duration = TimeSpan.FromSeconds(0.4d);
+            var easing = new CircleEase()
             {
-                MainFrame_Grid.Children.Move(1, Convert.ToUInt32(MainFrame_Grid.Children.IndexOf(MainFrame_Grid.Children.Last())));
+                EasingMode = fromTouch ? EasingMode.EaseOut : EasingMode.EaseInOut
+            };
 
-                //ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0, 0, 0, 0, 800);
-                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("ForwardConnectedAnimation", WebPageViewModel.ReturnActiveWebview());
-                var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("ForwardConnectedAnimation");
-                if (anim != null)
+            var sb = new Storyboard();
+            sb.Children.Add(CreateAnimation(View.BrowserSplitViewTransform, "ScaleX", selectScaleX, duration, easing));
+            sb.Children.Add(CreateAnimation(View.BrowserSplitViewTransform, "ScaleY", selectScaleY, duration, easing));
+
+            var container = OverViewViewModel.Current.View.TabsGridView.ContainerFromItem(OverViewViewModel.Current.View.SelectedModel) as FrameworkElement;
+            sb.Children.Add(CreateAnimation(View.BrowserSplitViewTransform, "TranslateX", - this.View.TransformToVisual(container).TransformPoint(default).X, duration, easing));
+            sb.Children.Add(CreateAnimation(View.BrowserSplitViewTransform, "TranslateY", - this.View.TransformToVisual(container).TransformPoint(default).Y, duration, easing));
+
+            sb.Children.Add(CreateAnimation(OverViewViewModel.Current.View.TabsGridViewTransform, "ScaleX", 1, duration, easing));
+            sb.Children.Add(CreateAnimation(OverViewViewModel.Current.View.TabsGridViewTransform, "ScaleY", 1, duration, easing));
+
+            sb.Children.Add(CreateAnimation(OverViewViewModel.Current.View.TabsGridViewTransform, "TranslateX", 0, duration, easing));
+            sb.Children.Add(CreateAnimation(OverViewViewModel.Current.View.TabsGridViewTransform, "TranslateY", 0, duration, easing));
+            DoubleAnimation FadeInAnimation = new DoubleAnimation()
+            {
+                BeginTime = TimeSpan.FromSeconds(0.3d),
+                Duration = TimeSpan.FromSeconds(0.2d),
+                From = 0,
+                To = 1,
+                EasingFunction = easing
+            };
+            Storyboard.SetTarget(FadeInAnimation, OverViewViewModel.Current.View.OverViewHeader);
+            Storyboard.SetTargetProperty(FadeInAnimation, "Opacity");
+            sb.Children.Add(FadeInAnimation);
+
+            sb.Completed += AnimationToList_Completed;
+            sb.Begin();
+        }
+
+        private Timeline CreateAnimation(DependencyObject target, string path, double toValue, TimeSpan duration, EasingFunctionBase easingFunc, double? stopValue = null)
+        {
+            Timeline an;
+
+            if (!stopValue.HasValue || stopValue.Value == toValue)
+            {
+                an = new DoubleAnimation()
                 {
-                    //anim.Configuration = new DirectConnectedAnimationConfiguration();
-                    anim.TryStart(TabsSetViewModel.ReturnActiveWebview());
-                }
-
-                TabsSetViewModel.SwitchTaskView();
-
-                IsTaskViewVisible = true;
+                    To = toValue,
+                    Duration = duration,
+                    EasingFunction = easingFunc
+                };
             }
             else
             {
-                //ConnectedAnimationService.GetForCurrentView().DefaultDuration = new TimeSpan(0, 0, 0, 800);
-                ConnectedAnimationService.GetForCurrentView().PrepareToAnimate("BackwardConnectedAnimation", TabsSetViewModel.ReturnActiveWebview());
+                TimeSpan fixedDuration = duration;
+                TimeSpan endDuration = duration;
 
-                MainFrame_Grid.Children.Move(Convert.ToUInt32(MainFrame_Grid.Children.IndexOf(MainFrame_Grid.Children.Last())), 1);
-
-                var anim = ConnectedAnimationService.GetForCurrentView().GetAnimation("BackwardConnectedAnimation");
-                if (anim != null)
+                if (duration > TimeSpan.FromMilliseconds(10))
                 {
-                    //anim.Configuration = new DirectConnectedAnimationConfiguration();
-                    anim.TryStart(WebPageViewModel.ReturnActiveWebview());
+                    fixedDuration = duration - TimeSpan.FromMilliseconds(10);
+                }
+                else
+                {
+                    endDuration = duration + TimeSpan.FromMilliseconds(10);
                 }
 
-                TabsSetViewModel.SwitchTaskView();
+                an = new DoubleAnimationUsingKeyFrames()
+                {
+                    KeyFrames =
+                    {
+                        new EasingDoubleKeyFrame()
+                        {
+                            Value = toValue,
+                            KeyTime = duration,
+                            EasingFunction = easingFunc,
+                        },
+                        new DiscreteDoubleKeyFrame()
+                        {
+                            Value = stopValue.Value,
+                            KeyTime = duration + TimeSpan.FromMilliseconds(10)
+                        }
+                    }
+                };
+            }
 
+            Storyboard.SetTarget(an, target);
+            Storyboard.SetTargetProperty(an, path);
 
-                IsTaskViewVisible = false;
+            return an;
+        }
+
+        public void AnimationToList_Completed(object sender, object e)
+        {
+            if (sender is Storyboard sb)
+            {
+                sb.Completed -= AnimationToList_Completed;
+            }
+            ScrollViewer.SetVerticalScrollMode(OverViewViewModel.Current.View.TabsGridViewTransform, ScrollMode.Enabled);
+            ResetTransform(false);
+        }
+
+        public void ResetTransform(bool isSelect, bool resetAnimationState = true)
+        {
+            if (isSelect)
+            {
+                View.BrowserSplitView.Visibility = Visibility.Visible;
+
+                View.BrowserSplitViewTransform.TranslateX = 0;
+                View.BrowserSplitViewTransform.TranslateY = 0;
+                View.BrowserSplitViewTransform.ScaleX = 1;
+                View.BrowserSplitViewTransform.ScaleY = 1;
+
+                OverViewViewModel.Current.ResetTransform(isSelect, resetAnimationState);
+            }
+            else
+            {
+                View.BrowserSplitView.Visibility = Visibility.Collapsed;
+                var container = OverViewViewModel.Current.View.TabsGridView.ContainerFromItem(OverViewViewModel.Current.View.SelectedModel) as FrameworkElement;
+                var selectScale = OverViewViewModel.Current.GridViewItemWidth / View.ActualWidth;
+                var selectedTransX = -this.View.TransformToVisual(container).TransformPoint(default).X;
+                var selectedTransY = -this.View.TransformToVisual(container).TransformPoint(default).Y;
+
+                View.BrowserSplitViewTransform.TranslateX = selectedTransX;
+                View.BrowserSplitViewTransform.TranslateY = selectedTransY;
+                View.BrowserSplitViewTransform.ScaleX = selectScale;
+                View.BrowserSplitViewTransform.ScaleY = selectScale;
+
+                OverViewViewModel.Current.ResetTransform(isSelect, resetAnimationState);
+            }
+
+            if (resetAnimationState)
+            {
+                isAnimating = false;
             }
         }
-
-        public void AddNewTabPage(TabPageInfo info)
-        {
-            TabsSetViewModel.Add(info.ID, info.Url, info.Title);
-            TabPageViewModel.Add(info);
-        }
-
-        public void SwitchTabPage(Guid tab_id)
-        {
-            TabsSetViewModel.Switch(tab_id);
-            TabPageViewModel.Switch(tab_id);
-        }
-
-        public void DeleteTabPage(Guid tab_id)
-        {
-            TabsSetViewModel.Delete(tab_id);
-            TabPageViewModel.Delete(tab_id);
-        }
-
-        public void UpdateTabPage(TabPageInfo tabPageInfo)
-        {
-            TabsSetViewModel.Update(tabPageInfo);
-        }
-
-
-
     }
 }

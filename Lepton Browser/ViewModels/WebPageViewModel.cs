@@ -57,7 +57,7 @@ namespace Lepton_Browser.ViewModels
         {
             WebView result = null;
             Guid active_id;
-            active_id = AppManager.Current.Active_Tab_ID;
+            active_id = TabsService.Current.Active_Tab_ID;
 
             foreach (var item in All)
             {
@@ -73,7 +73,7 @@ namespace Lepton_Browser.ViewModels
         {
             WebPageViewModel result = null;
             Guid active_id;
-            active_id = AppManager.Current.Active_Tab_ID;
+            active_id = TabsService.Current.Active_Tab_ID;
 
             foreach (var item in All)
             {
@@ -177,11 +177,11 @@ namespace Lepton_Browser.ViewModels
             //OURBRIDGEOBJ这个是我们的对象插入到页面之后对象的变量名，这是一个全局变量，也就是window.OURBRIDGEOBJ
             this.WebView.AddWebAllowedObject("WebViewBridge", _bridge);
             IsLoading = true;
-            var info = new TabPageInfo();
+            var info = new TabModel();
             info.ID = ID;
             info.Title = "正在加载";
             info.Avastar = WebView.Source.ToString();
-            AppManager.Current.UpdateTabPage(info);
+            TabsService.Current.Update(info);
             Update();
         }
 
@@ -192,11 +192,11 @@ namespace Lepton_Browser.ViewModels
         private async void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             IsLoading = false;
-            var info = new TabPageInfo();
+            var info = new TabModel();
             info.ID = ID;
             info.Title = WebView.DocumentTitle;
             info.Avastar = WebView.Source.ToString();
-            AppManager.Current.UpdateTabPage(info);
+            TabsService.Current.Update(info);
             Update();
             await UpdateCaptureScreenShot();
         }
@@ -478,7 +478,7 @@ namespace Lepton_Browser.ViewModels
         public async Task UpdateCaptureScreenShot()
         {
             BitmapSource bitmapImage = await CaptureScreenShot();
-            TabsSetViewModel.Current.UpdateCaptureScreenShot(ID, bitmapImage);
+            TaskBarViewModel.Current.UpdateCaptureScreenShot(ID, bitmapImage);
         }
 
         public void Update()

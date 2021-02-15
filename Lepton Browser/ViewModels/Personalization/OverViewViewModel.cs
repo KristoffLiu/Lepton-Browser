@@ -12,7 +12,7 @@ namespace Lepton_Browser.ViewModels.Personalization
     {
         public OverViewViewModel()
         {
-            IsNightMode = Models.Personalization.IsNightMode;
+            IsNightMode = Models.PersonalizationService.IsNightMode;
         }
         #region Personalization 个性化
         bool _IsNightMode = false;
@@ -22,7 +22,7 @@ namespace Lepton_Browser.ViewModels.Personalization
             set
             {
                 Set(ref _IsNightMode, value);
-                Models.Personalization.IsNightMode = value;
+                Models.PersonalizationService.IsNightMode = value;
             }
         }
         
@@ -38,14 +38,14 @@ namespace Lepton_Browser.ViewModels.Personalization
             }
         }
 
-        double _BackgroundAcrylicOpacity = Models.Personalization.AcrylicBrushOpacity;
+        double _BackgroundAcrylicOpacity = Models.PersonalizationService.AcrylicBrushOpacity;
         public double BackgroundAcrylicOpacity
         {
             get { return _BackgroundAcrylicOpacity; }
             set
             {
                 Set(ref _BackgroundAcrylicOpacity, value);
-                Models.Personalization.AcrylicBrushOpacity = value;
+                Models.PersonalizationService.AcrylicBrushOpacity = value;
             }
         }
 

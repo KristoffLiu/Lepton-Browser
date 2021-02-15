@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace Lepton_Browser.Models
 {
-    public class TabPageModel
+    public class TabModel
     {
-        public TabPageModel()
+        public TabModel()
         {
             ID = Guid.NewGuid();
         }
         public Guid ID { get; set; }
+        public Guid Windows_ID { get; set; }
         public TabPageCategory Category { get; set; }
         public string Title { get; set; }
         public string Url { get; set; }
@@ -23,15 +24,5 @@ namespace Lepton_Browser.Models
     {
         WebPage = 0,
         FormPage = 1,
-    }
-
-    public class TabPageInfo
-    {
-        public Guid Window_ID { get; set; }
-        public Guid ID { get; set; }
-        public TabPageCategory Category { get; set; }
-        public string Title { get; set; }
-        public string Url { get; set; }
-        public string Avastar { get; set; }
     }
 }

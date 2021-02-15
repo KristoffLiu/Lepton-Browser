@@ -23,14 +23,23 @@ namespace Lepton_Browser.Views
     /// </summary>
     public sealed partial class OverView : Page
     {
-        TabsSetViewModel ViewModel;
+        OverViewViewModel ViewModel;
         public OverView()
         {
             this.InitializeComponent();
-            ViewModel = TabsSetViewModel.Current;
+            ViewModel = new OverViewViewModel(this);
             DataContext = ViewModel;
-            ViewModel.SetTaskGridView(TabsAdaptiveGridView);
         }
+
+        public TabGridViewItemViewModel SelectedModel
+        {
+            get { return (TabGridViewItemViewModel)GetValue(SelectedModelProperty); }
+            set { SetValue(SelectedModelProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SelectedModel.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SelectedModelProperty =
+            DependencyProperty.Register("SelectedModel", typeof(TabGridViewItemViewModel), typeof(OverView), new PropertyMetadata(null));
 
         private void VerticalThumb_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
@@ -45,6 +54,14 @@ namespace Lepton_Browser.Views
         private void TimeLineScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
 
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //if (!MainFrameViewModel.Current.isAnimating)
+            //{
+            //    ViewModel.UpdateLayout();
+            //}
         }
     }
 }

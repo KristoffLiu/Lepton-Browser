@@ -1,4 +1,5 @@
 ﻿using Lepton_Browser.Models;
+using Lepton_Browser.Services;
 using Lepton_Browser.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -32,24 +33,16 @@ namespace Lepton_Browser.Views
 
         public MainFrame()
         {
-            this.InitializeComponent();
-            ViewModel = AppManager.Current.MainFrameViewModel;
             Current = this;
+            ViewModel = new MainFrameViewModel(this);
+            this.InitializeComponent();
+            Models.TitleBarService.SetContrastColor();
             DataContext = ViewModel;
             ViewModel.InputUserControl(taskview, MainFrame_Grid);
             #region 标题栏设置 Title Bar Setting
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true; //扩展标题栏
             Window.Current.SetTitleBar(TitleBar); //设置某个容器空间（我一般就用的Grid）为标题栏，即可拖拽来位移窗体
             //注意：该控件必须要有颜色，哪怕是Transparent透明也行。如果不设置background，它就是空的没法进行拖拽。
-            var view = ApplicationView.GetForCurrentView();//来进行以下一系列设置标题栏组件颜色的操作
-            view.TitleBar.ButtonBackgroundColor = Color.FromArgb(0, 0, 0, 0);
-            view.TitleBar.ButtonForegroundColor = Colors.White;
-            view.TitleBar.ButtonHoverBackgroundColor = Color.FromArgb(38, 0, 0, 0);
-            view.TitleBar.ButtonHoverForegroundColor = Colors.White;
-            view.TitleBar.ButtonPressedBackgroundColor = Color.FromArgb(70, 0, 0, 0);
-            view.TitleBar.ButtonPressedForegroundColor = Colors.White;
-            view.TitleBar.ButtonInactiveBackgroundColor = Color.FromArgb(0, 0, 0, 0);
-            view.TitleBar.ButtonInactiveForegroundColor = Colors.Gray;
             #endregion
         }
 
@@ -60,7 +53,7 @@ namespace Lepton_Browser.Views
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            AppManager.Current.AddNewTabPage("百度", "https://www.baidu.com");
+            TabsService.Current.Add("百度", "https://www.baidu.com");
         }
     }
 }

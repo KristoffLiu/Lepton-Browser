@@ -32,13 +32,13 @@ namespace Lepton_Browser
         public App()
         {
             EvalJSService.InitServiceAsync();
-            tabPageManager = new AppManager();
+            AppServices = new AppServices();
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
-        public static AppManager tabPageManager;
+        public static AppServices AppServices;
 
         /// <summary>
         /// 在应用程序由最终用户正常启动时进行调用。

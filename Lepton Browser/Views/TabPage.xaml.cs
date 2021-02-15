@@ -27,7 +27,7 @@ namespace Lepton_Browser.Views
         public TabPage()
         {
             this.InitializeComponent();
-            ViewModel = TabPageViewModel.Current;
+            ViewModel = new TabPageViewModel(this);
             ViewModel.InputGrid(TabPageFrameGrid);
         }
 

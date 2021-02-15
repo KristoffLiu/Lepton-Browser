@@ -26,7 +26,7 @@ namespace Lepton_Browser.Views
         public SideBarViewModel ViewModel;
         public SideBar()
         {
-            ViewModel = SideBarViewModel.Current;
+            ViewModel = new SideBarViewModel(this);
             DataContext = ViewModel;
             this.InitializeComponent();
         }
