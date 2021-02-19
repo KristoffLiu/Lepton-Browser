@@ -28,7 +28,7 @@
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid>
-                        <Grid x:Name="TitleBar" Background="#FFEEEEEE" Height="40" VerticalAlignment="Top"></Grid>
+                        <Grid x:Name="TitleBar" Background="#FFDDDDDD" Height="40" VerticalAlignment="Top"></Grid>
                         <local:TaskBar VerticalAlignment="Bottom" Margin="10,0,0,0"></local:TaskBar>
                     </Grid>
 

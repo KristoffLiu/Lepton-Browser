@@ -41,7 +41,7 @@ namespace Lepton_Browser.ViewModels
         public void Add(TabPageFrameItemViewModel itemViewModel)
         {
             var newframe = new Frame();
-            newframe.Tag = itemViewModel.ID;
+            newframe.Tag = itemViewModel;
             if (itemViewModel.Category == TabPageCategory.FormPage)
             {
                 
@@ -64,8 +64,8 @@ namespace Lepton_Browser.ViewModels
         {
             ActiveTabPageItemID = tab_id;
             foreach (var controlitem in TabPageFrameGrid.Children)
-            {
-                if (((Guid)((Frame)controlitem).Tag) == tab_id)
+            { 
+                if (((TabPageFrameItemViewModel)((Frame)controlitem).Tag).ID == tab_id)
                 {
                     controlitem.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 }
@@ -87,11 +87,6 @@ namespace Lepton_Browser.ViewModels
                 }
             }
             //HideAndShow(tab_id);
-        }
-
-        public void Update()
-        {
-
         }
 
         public void GoBack()
@@ -142,11 +137,8 @@ namespace Lepton_Browser.ViewModels
             Uri         = tabModel.Url;
         }
 
-        public Guid ID
-        {
-            get { return _ID; }
-            set { Set(ref _ID, value); }
-        }
+        public Guid ID;
+
 
         public Guid Window_ID
         {

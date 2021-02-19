@@ -48,7 +48,7 @@
                             <PivotItem Header="&#xE7C3;" Margin="0,0,0,0">
                                 <StackPanel Padding="0,10,0,10" Margin="0,0,0,0" Background="White">
                                     <StackPanel>
-                                        <TextBlock Text="页面"  FontSize="22" Margin="20,0,0,0"></TextBlock>
+                                        <TextBlock Text="页面"  FontSize="22" Margin="20,0,0,5"></TextBlock>
                                         <StackPanel  Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                                             <Button x:Name="AddTabButton"  Background="Transparent">
                                                 <Grid Width="80" Height="60">

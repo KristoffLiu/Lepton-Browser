@@ -1588,14 +1588,14 @@
                           IsItemClickEnabled="True"
                           ItemsSource="{x:Bind ViewModel.TabGridViewItems,Mode=TwoWay}"
                           SelectedItem="0"
-                          HorizontalAlignment="Left"
-                          Margin="20,0,0,0" Padding="0,0,0,0">
+                          HorizontalAlignment="Center"
+                          Margin="22,0,0,0" Padding="0,0,0,0">
                     <GridView.RenderTransform>
                         <CompositeTransform x:Name="TabsGridViewTransform" x:FieldModifier="public"></CompositeTransform>
                     </GridView.RenderTransform>
                     <GridView.ItemTemplate>
                         <DataTemplate x:DataType="viewmodels:TabGridViewItemViewModel">
-                            <Grid Width="{x:Bind Width,Mode=OneWay}" Height="{x:Bind Height,Mode=OneWay}" Margin="0,0,0,10" VerticalAlignment="Center"
+                            <Grid MaxWidth="{x:Bind Width,Mode=OneWay}" Height="{x:Bind Height,Mode=OneWay}" Margin="0,0,0,10" VerticalAlignment="Center"
                                   Background="White"
                                   CornerRadius="8"><!--PointerPressed="{x:Bind Grid_PointerPressed}"-->
                                 <Grid VerticalAlignment="Top">
@@ -1619,7 +1619,7 @@
                                                       Glyph="&#xE894;" Margin="0,0,0,9"></FontIcon>
                                     </Button>
                                 </Grid>
-                                <Grid Margin="0,30,0,10" VerticalAlignment="Bottom">
+                                <Grid Margin="0,30,0,-5" VerticalAlignment="Bottom">
                                     <Grid
                                           Background="#FFFFFFFF"
                                           VerticalAlignment="Center"

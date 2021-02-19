@@ -115,18 +115,28 @@ namespace Lepton_Browser.ViewModels
 
             sb.Children.Add(CreateAnimation(OverViewViewModel.Current.View.TabsGridViewTransform, "TranslateX", 0, duration, easing));
             sb.Children.Add(CreateAnimation(OverViewViewModel.Current.View.TabsGridViewTransform, "TranslateY", 0, duration, easing));
-            DoubleAnimation FadeInAnimation = new DoubleAnimation()
+            DoubleAnimation HeaderFadeInAnimation = new DoubleAnimation()
             {
                 BeginTime = TimeSpan.FromSeconds(0.3d),
                 Duration = TimeSpan.FromSeconds(0.2d),
-                From = 0,
                 To = 1,
                 EasingFunction = easing
             };
-            Storyboard.SetTarget(FadeInAnimation, OverViewViewModel.Current.View.OverViewHeader);
-            Storyboard.SetTargetProperty(FadeInAnimation, "Opacity");
-            sb.Children.Add(FadeInAnimation);
+            Storyboard.SetTarget(HeaderFadeInAnimation, OverViewViewModel.Current.View.OverViewHeader);
+            Storyboard.SetTargetProperty(HeaderFadeInAnimation, "Opacity");
 
+            DoubleAnimation SplitViewFadeOutAnimation = new DoubleAnimation()
+            {
+                BeginTime = TimeSpan.FromSeconds(0.3d),
+                Duration = TimeSpan.FromSeconds(0.1d),
+                To = 0,
+                EasingFunction = easing
+            };
+            Storyboard.SetTarget(SplitViewFadeOutAnimation, View.BrowserSplitView);
+            Storyboard.SetTargetProperty(SplitViewFadeOutAnimation, "Opacity");
+
+            sb.Children.Add(HeaderFadeInAnimation);
+            sb.Children.Add(SplitViewFadeOutAnimation);
             sb.Completed += AnimationToList_Completed;
             sb.Begin();
         }
@@ -210,14 +220,15 @@ namespace Lepton_Browser.ViewModels
             {
                 View.BrowserSplitView.Visibility = Visibility.Collapsed;
                 var container = OverViewViewModel.Current.View.TabsGridView.ContainerFromItem(OverViewViewModel.Current.View.SelectedModel) as FrameworkElement;
-                var selectScale = OverViewViewModel.Current.GridViewItemWidth / View.ActualWidth;
+                var selectScaleX = OverViewViewModel.Current.GridViewItemWidth / View.ActualWidth;
+                var selectScaleY = OverViewViewModel.Current.GridViewItemHeight / View.ActualHeight;
                 var selectedTransX = -this.View.TransformToVisual(container).TransformPoint(default).X;
                 var selectedTransY = -this.View.TransformToVisual(container).TransformPoint(default).Y;
 
                 View.BrowserSplitViewTransform.TranslateX = selectedTransX;
                 View.BrowserSplitViewTransform.TranslateY = selectedTransY;
-                View.BrowserSplitViewTransform.ScaleX = selectScale;
-                View.BrowserSplitViewTransform.ScaleY = selectScale;
+                View.BrowserSplitViewTransform.ScaleX = selectScaleX;
+                View.BrowserSplitViewTransform.ScaleY = selectScaleY;
 
                 OverViewViewModel.Current.ResetTransform(isSelect, resetAnimationState);
             }

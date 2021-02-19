@@ -45,10 +45,10 @@ namespace Lepton_Browser.Views
             se = sender as Grid;
             ISource.Source = ((TaskBarItemViewModel)se.DataContext).CapturedImage;
             Text.Text = ((TaskBarItemViewModel)se.DataContext).Title;
-            ShowMenu(false,se);
+            ShowMenu(false, se);
         }
 
-        private void ShowMenu(bool isTransient,FrameworkElement fe)
+        private void ShowMenu(bool isTransient, FrameworkElement fe)
         {
             FlyoutShowOptions myOption = new FlyoutShowOptions();
             myOption.ShowMode = isTransient ? FlyoutShowMode.Transient : FlyoutShowMode.Standard;
@@ -57,12 +57,32 @@ namespace Lepton_Browser.Views
 
         private void OnElementClicked(object sender, RoutedEventArgs e)
         {
-            
+
         }
 
         private void CloseButton_Clicked(object sender, RoutedEventArgs e)
         {
             TabsService.Current.Delete(((TaskBarItemViewModel)se.DataContext).Id);
         }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
+            TaskBarScrollViewer.MaxWidth = this.ActualWidth - 220;
+        }
+
+        //public class SexConverter : IValueConverter
+        //{
+        //    public object Convert(object value, Type targetType, object parameter, string language)
+        //    {
+        //        Sex sex = (Sex)value;
+        //        return sex == Sex.F ? "女" : "男";
+        //    }
+
+        //    public object ConvertBack(object value, Type targetType, object parameter, string language)
+        //    {
+        //        throw new NotImplementedException();
+        //    }
+        //}
     }
 }

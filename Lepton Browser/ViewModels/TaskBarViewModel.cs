@@ -63,13 +63,17 @@ namespace Lepton_Browser.ViewModels
 
         public void Update(TaskBarItemViewModel taskBarItemViewModel)
         {
+            int count = 0;
             foreach (var item in TaskBarViewItems)
             {
                 if (item.Id == taskBarItemViewModel.Id)
                 {
-                    item.Title = taskBarItemViewModel.Title == null ? item.Title : taskBarItemViewModel.Title;
-                    item.Avastar = taskBarItemViewModel.Avastar == null ? item.Avastar : taskBarItemViewModel.AvastarUri(taskBarItemViewModel.Avastar);
+                    item.Avastar = taskBarItemViewModel.Avastar;
+                    item.CapturedImage = taskBarItemViewModel.CapturedImage;
+                    item.Title = taskBarItemViewModel.Title;
+                    break;
                 }
+                count++;
             }
         }
 

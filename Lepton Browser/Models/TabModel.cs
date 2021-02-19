@@ -8,6 +8,7 @@ namespace Lepton_Browser.Models
 {
     public class TabModel
     {
+        string _avastar;
         public TabModel()
         {
             ID = Guid.NewGuid();
@@ -17,7 +18,16 @@ namespace Lepton_Browser.Models
         public TabPageCategory Category { get; set; }
         public string Title { get; set; }
         public string Url { get; set; }
-        public string Avastar { get; set; }
+        public string Avastar { 
+            get { return _avastar; } 
+            set { _avastar = AvastarUri(value); } 
+        }
+
+        public string AvastarUri(string _uri)
+        {
+            var __uri = new Uri(_uri);
+            return __uri.Scheme + "://" + __uri.Host.ToString() + "/favicon.ico";
+        }
     }
 
     public enum TabPageCategory

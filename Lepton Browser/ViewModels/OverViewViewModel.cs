@@ -49,20 +49,24 @@ namespace Lepton_Browser.ViewModels
 
         public void Select(Guid tabID)
         {
-            TabGridViewItemViewModel selectedItem = null;
-            foreach (var item in TabGridViewItems)
+            if(TabGridViewItems.Count >= 1)
             {
-                if (item.Id == tabID)
+                TabGridViewItemViewModel selectedItem = null;
+                foreach (var item in TabGridViewItems)
                 {
-                    selectedItem = item;
-                    break;
+                    if (item.Id == tabID)
+                    {
+                        selectedItem = item;
+                        break;
+                    }
                 }
+                if (selectedItem != null)
+                {
+                    View.TabsGridView.SelectedItem = selectedItem;
+                    View.SelectedModel = selectedItem;
+                }
+                UpdateLayout();
             }
-            if(selectedItem != null)
-            {
-                View.TabsGridView.SelectedItem = selectedItem;
-            }
-            UpdateLayout();
         }
 
         public void Update(TabModel tabModel)
@@ -87,13 +91,13 @@ namespace Lepton_Browser.ViewModels
                 case 0:
                     break;
                 case 1:
-                    UpdateTabGridViewItemSize(View.ActualWidth - 300, (View.ActualWidth - 500) / 1.5);
+                    UpdateTabGridViewItemSize(View.ActualWidth - 300, (View.ActualWidth - 500) / 1.25);
                     break;
                 case 2:
                     UpdateTabGridViewItemSize((View.ActualWidth - 400)/2, (View.ActualWidth - 400) / 2 / 1.5);
                     break;
                 case 3:
-                    UpdateTabGridViewItemSize((View.ActualWidth - 500) / 3, (View.ActualWidth - 500) / 3 / 1.5);
+                    UpdateTabGridViewItemSize(350, 250);
                     break;
                 default:
                     UpdateTabGridViewItemSize(350, 250);
@@ -307,17 +311,18 @@ namespace Lepton_Browser.ViewModels
         {
             if (isSelect)
             {
-                OverViewViewModel.Current.View.TabsGridViewTransform.TranslateX = 0;
-                OverViewViewModel.Current.View.TabsGridViewTransform.TranslateY = 0;
-                OverViewViewModel.Current.View.TabsGridViewTransform.ScaleX = 1;
-                OverViewViewModel.Current.View.TabsGridViewTransform.ScaleY = 1;
+                View.TabsGridViewTransform.TranslateX = 0;
+                View.TabsGridViewTransform.TranslateY = 0;
+                View.TabsGridViewTransform.ScaleX = 1;
+                View.TabsGridViewTransform.ScaleY = 1;
+                View.TabsGridView.Visibility = Visibility.Collapsed;
             }
             else
             {
-                OverViewViewModel.Current.View.TabsGridViewTransform.TranslateX = 0;
-                OverViewViewModel.Current.View.TabsGridViewTransform.TranslateY = 0;
-                OverViewViewModel.Current.View.TabsGridViewTransform.ScaleX = 1;
-                OverViewViewModel.Current.View.TabsGridViewTransform.ScaleY = 1;
+                View.TabsGridViewTransform.TranslateX = 0;
+                View.TabsGridViewTransform.TranslateY = 0;
+                View.TabsGridViewTransform.ScaleX = 1;
+                View.TabsGridViewTransform.ScaleY = 1;
             }
 
             gridOffsetX = 0;
@@ -343,6 +348,7 @@ namespace Lepton_Browser.ViewModels
         {
             var clickeditem = e.ClickedItem as TabGridViewItemViewModel;
             TabsService.Current.Select(clickeditem.Id);
+            ResetTransformWhenSelectionChanged();
 
             if (MainFrameViewModel.Current.isAnimating) return;
 
@@ -373,6 +379,16 @@ namespace Lepton_Browser.ViewModels
             };
 
             var sb = new Storyboard();
+            DoubleAnimation SplitViewFadeInAnimation = new DoubleAnimation()
+            {
+                Duration = TimeSpan.FromSeconds(0.2d),
+                To = 1,
+                EasingFunction = easing
+            };
+            Storyboard.SetTarget(SplitViewFadeInAnimation, MainFrameViewModel.Current.View.BrowserSplitView);
+            Storyboard.SetTargetProperty(SplitViewFadeInAnimation, "Opacity");
+            sb.Children.Add(SplitViewFadeInAnimation);
+
             sb.Children.Add(CreateAnimation(MainFrameViewModel.Current.View.BrowserSplitViewTransform, "ScaleX", 1, duration, easing));
             sb.Children.Add(CreateAnimation(MainFrameViewModel.Current.View.BrowserSplitViewTransform, "ScaleY", 1, duration, easing));
 
@@ -465,6 +481,7 @@ namespace Lepton_Browser.ViewModels
 
         public void ScrollIntoView()
         {
+            View.TabsGridView.Visibility = Visibility.Visible;
             View.TabsGridView.ScrollIntoView(View.TabsGridView.SelectedItem);
             View.TabsGridView.UpdateLayout();
 
@@ -506,6 +523,20 @@ namespace Lepton_Browser.ViewModels
                 gridOffsetX = offset.X + this.View.ActualWidth / 2 - GridViewItemWidth / 2;
                 gridOffsetY = offset.Y + this.View.ActualHeight / 2 - GridViewItemHeight / 2;
             }
+        }
+
+        public void ResetTransformWhenSelectionChanged()
+        {
+            var container = View.TabsGridView.ContainerFromItem(View.SelectedModel) as FrameworkElement;
+            var selectScaleX = GridViewItemWidth / View.ActualWidth;
+            var selectScaleY = GridViewItemHeight / View.ActualHeight;
+            var selectedTransX = -this.View.TransformToVisual(container).TransformPoint(default).X;
+            var selectedTransY = -this.View.TransformToVisual(container).TransformPoint(default).Y;
+
+            MainFrameViewModel.Current.View.BrowserSplitViewTransform.TranslateX = selectedTransX;
+            MainFrameViewModel.Current.View.BrowserSplitViewTransform.TranslateY = selectedTransY;
+            MainFrameViewModel.Current.View.BrowserSplitViewTransform.ScaleX = selectScaleX;
+            MainFrameViewModel.Current.View.BrowserSplitViewTransform.ScaleY = selectScaleY;
         }
     }
 

@@ -23,6 +23,7 @@ namespace Lepton_Browser.Views
     /// </summary>
     public sealed partial class ManipulationBar : Page
     {
+        public static double TextBoxWidth = 0;
         public ManipulationBarViewModel ViewModel;
 
         public ManipulationBar()
@@ -30,6 +31,30 @@ namespace Lepton_Browser.Views
             ViewModel = new ManipulationBarViewModel(this);
             DataContext = ViewModel;
             this.InitializeComponent();
+        }
+
+        private void InteliSenseBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            InteliSenseBox.SelectAll();
+        }
+
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TextBoxWidth = InteliSenseBox.Width;
+        }
+    }
+
+    public class HalfWidthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            double width = (double)value;
+            return width / 2;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
         }
     }
 }

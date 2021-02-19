@@ -29,7 +29,7 @@ namespace Lepton_Browser.Services
                 Category = TabPageCategory.WebPage,
                 Title = Title,
                 Url = web_url,
-                Avastar = AvastarUri(web_url)
+                Avastar = web_url
             };
             Tabs.Add(item);
             TaskBarViewModel.Current.Add(new TaskBarItemViewModel(item));
@@ -37,10 +37,20 @@ namespace Lepton_Browser.Services
             TabPageViewModel.Current.Add(new TabPageFrameItemViewModel(item));
         }
 
-        public string AvastarUri(string _uri)
+        public void Add(Uri uri)
         {
-            var __uri = new Uri(_uri);
-            return __uri.Scheme + "://" + __uri.Host.ToString() + "/favicon.ico";
+            var item = new TabModel()
+            {
+                ID = Guid.NewGuid(),
+                Category = TabPageCategory.WebPage,
+                Title = "",
+                Url = uri.ToString(),
+                Avastar = uri.ToString()
+            };
+            Tabs.Add(item);
+            TaskBarViewModel.Current.Add(new TaskBarItemViewModel(item));
+            OverViewViewModel.Current.Add(new TabGridViewItemViewModel(item));
+            TabPageViewModel.Current.Add(new TabPageFrameItemViewModel(item));
         }
 
         public void Delete(Guid tab_id)
@@ -61,6 +71,7 @@ namespace Lepton_Browser.Services
             TaskBarViewModel.Current.Select(tab_id);
             OverViewViewModel.Current.Select(tab_id);
             TabPageViewModel.Current.Select(tab_id);
+            //ManipulationBarViewModel.Current.
         }
 
         public void Move(Guid tab_id, int index)
@@ -85,6 +96,8 @@ namespace Lepton_Browser.Services
                     break;
                 }
             }
+            TaskBarViewModel.Current.Update(new TaskBarItemViewModel(tabModel));
+            OverViewViewModel.Current.Update(tabModel);
         }
     }
 }

@@ -410,6 +410,7 @@ namespace Lepton_Browser.ViewModels
             Uri uri = args.Uri;
             // uri 的 referrer（本例中此值为 https://www.baidu.com/ 并不是 uri 的 referrer，为啥？）
             Uri referrer = args.Referrer;
+            TabsService.Current.Add(uri);
             //MainPage.CurrentMainPage.WebView_NewWindowRequested(uri);
             //await new MessageDialog(uri.ToString(), "需要新开窗口的 uri").ShowAsync();
         }
@@ -479,6 +480,7 @@ namespace Lepton_Browser.ViewModels
         {
             BitmapSource bitmapImage = await CaptureScreenShot();
             TaskBarViewModel.Current.UpdateCaptureScreenShot(ID, bitmapImage);
+            OverViewViewModel.Current.UpdateCaptureScreenShot(ID, bitmapImage);
         }
 
         public void Update()

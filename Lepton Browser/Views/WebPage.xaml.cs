@@ -34,7 +34,7 @@ namespace Lepton_Browser.Views
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            if ( ((TabPageFrameItemViewModel)e.Parameter).Title is string && !string.IsNullOrWhiteSpace(((TabPageFrameItemViewModel)e.Parameter).Title))
+            if ( ((TabPageFrameItemViewModel)e.Parameter).Title is string )//&& !string.IsNullOrWhiteSpace(((TabPageFrameItemViewModel)e.Parameter).Title)
             {
                 var info = ((TabPageFrameItemViewModel)e.Parameter);
                 ViewModel.Windows_ID = info.Window_ID;
