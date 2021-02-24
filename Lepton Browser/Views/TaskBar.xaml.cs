@@ -67,8 +67,8 @@ namespace Lepton_Browser.Views
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
             TaskBarScrollViewer.MaxWidth = this.ActualWidth - 220;
+            
         }
 
         //public class SexConverter : IValueConverter
