@@ -11,7 +11,7 @@
   <Identity
     Name="496fc75a-8807-488e-a5ea-f8f3de3b919a"
     Publisher="CN=kristoffliu"
-    Version="1.0.6.0" />
+    Version="0.0.7.0" />
 
   <mp:PhoneIdentity PhoneProductId="496fc75a-8807-488e-a5ea-f8f3de3b919a" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
